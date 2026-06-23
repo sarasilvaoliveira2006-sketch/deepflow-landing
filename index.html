@@ -88,7 +88,6 @@
         
         .footer { text-align: center; padding: 40px; color: #4b5563; border-top: 1px solid #1a1f36; margin-top: 40px; }
         
-        /* ===== MODAL ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -178,7 +177,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- ===== HERO ===== -->
         <div class="hero">
             <div class="badge">🚀 Micro-learning Assistido por IA</div>
             <h1>Requalifica-te no fluxo do teu trabalho, não fora dele</h1>
@@ -189,7 +187,6 @@
             <p class="sub-text">⚡ 5 minutos por dia · Gratuito para early adopters</p>
         </div>
 
-        <!-- ===== FEATURES ===== -->
         <div class="features">
             <div class="feature">
                 <h3>🧠 Aprendizagem Invisível</h3>
@@ -211,7 +208,6 @@
         </div>
     </div>
 
-    <!-- ===== MODAL ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <button class="modal-close" id="closeModalBtn">✕</button>
@@ -262,7 +258,6 @@
     </div>
 
     <script>
-        // ===== ELEMENTOS =====
         const modalOverlay = document.getElementById('modalOverlay');
         const openModalBtn = document.getElementById('openModalBtn');
         const closeModalBtn = document.getElementById('closeModalBtn');
@@ -272,13 +267,11 @@
         const closeSuccessBtn = document.getElementById('closeSuccessBtn');
         const downloadLink = document.getElementById('downloadLink');
 
-        // ===== ABRIR MODAL =====
         openModalBtn.addEventListener('click', function() {
             modalOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
         });
 
-        // ===== FECHAR MODAL =====
         function closeModal() {
             modalOverlay.classList.remove('active');
             document.body.style.overflow = 'auto';
@@ -298,7 +291,6 @@
             if (e.key === 'Escape') closeModal();
         });
 
-        // ===== SUBMISSÃO DO FORMULÁRIO =====
         signupForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -311,14 +303,11 @@
                 return;
             }
 
-            // Simular envio
             console.log('📨 Dados recolhidos:', { name, email, role });
 
-            // Mostrar mensagem de sucesso
             formContent.style.display = 'none';
             successMsg.style.display = 'block';
 
-            // Simular download do plugin (como descrito no relatório)
             downloadLink.addEventListener('click', function(e) {
                 e.preventDefault();
                 const blob = new Blob(['Deep-Flow Plugin - Versão Beta'], { type: 'application/zip' });
