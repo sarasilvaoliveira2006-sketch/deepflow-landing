@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deep-Flow | Upskilling Inteligente</title>
     <style>
-        /* ===== ESTILOS GERAIS ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
@@ -19,7 +18,6 @@
         }
         .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
         
-        /* ===== HERO ===== */
         .hero { text-align: center; padding: 60px 20px; }
         .badge { 
             display: inline-block; 
@@ -71,7 +69,6 @@
         }
         .sub-text { margin-top: 20px; font-size: 0.9rem; color: #6b7280; }
         
-        /* ===== FEATURES ===== */
         .features { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
@@ -89,11 +86,9 @@
         .feature h3 { color: #818cf8; margin-bottom: 10px; }
         .feature p { color: #9ca3af; }
         
-        /* ===== FOOTER ===== */
         .footer { text-align: center; padding: 40px; color: #4b5563; border-top: 1px solid #1a1f36; margin-top: 40px; }
-        .footer a { color: #818cf8; text-decoration: none; }
         
-        /* ===== MODAL / POPUP ===== */
+        /* ===== MODAL ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -175,7 +170,6 @@
         .modal .success-msg h3 { color: #34d399; margin-bottom: 8px; }
         .modal .success-msg p { color: #9ca3af; }
 
-        /* ===== RESPONSIVIDADE ===== */
         @media (max-width: 768px) { 
             .hero h1 { font-size: 2.2rem; } 
             .modal { padding: 30px 20px; }
@@ -190,7 +184,6 @@
             <h1>Requalifica-te no fluxo do teu trabalho, não fora dele</h1>
             <p>Transformamos janelas livres no teu calendário em progresso real de carreira. Micro-aprendizagem assistida por IA para profissionais sem tempo.</p>
             
-            <!-- BOTÃO PRINCIPAL - Abre o popup -->
             <button class="btn" id="openModalBtn">📦 Instalar Plugin e Iniciar Upskilling</button>
             
             <p class="sub-text">⚡ 5 minutos por dia · Gratuito para early adopters</p>
@@ -212,21 +205,19 @@
             </div>
         </div>
 
-        <!-- ===== FOOTER ===== -->
         <div class="footer">
             <p>Deep-Flow · Desenvolvido por <strong>Sarja</strong> · 2026</p>
             <p style="font-size: 0.8rem; margin-top: 10px;">Projeto de Inovação e Empreendedorismo</p>
         </div>
     </div>
 
-    <!-- ===== MODAL / POPUP ===== -->
+    <!-- ===== MODAL ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <button class="modal-close" id="closeModalBtn">✕</button>
             
-            <!-- Formulário -->
             <div id="formContent">
-                <h2>🚀 Começa agora</h2>
+                <h2>🚀 Começa agora o teu upskilling</h2>
                 <p>Inscreve-te para seres um dos primeiros a experimentar o Deep-Flow. Gratuito para early adopters.</p>
                 
                 <form id="signupForm">
@@ -240,7 +231,7 @@
                     </div>
                     <div class="form-group">
                         <label for="role">Área de atuação</label>
-                        <select id="role">
+                        <select id="role" required>
                             <option value="">Seleciona...</option>
                             <option value="developer">Desenvolvedor(a)</option>
                             <option value="data">Engenheiro(a) de Dados</option>
@@ -250,18 +241,21 @@
                             <option value="other">Outro</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn">📦 Quero instalar o plugin</button>
+                    <button type="submit" class="btn">📥 Instalar Plugin Agora</button>
                 </form>
                 <p style="font-size: 0.8rem; color: #6b7280; margin-top: 12px; text-align: center;">
                     🔒 Os teus dados estão seguros. Sem spam.
                 </p>
             </div>
 
-            <!-- Mensagem de Sucesso (escondida inicialmente) -->
             <div class="success-msg" id="successMsg">
                 <div class="check">✅</div>
                 <h3>Inscrição confirmada!</h3>
-                <p>Enviamos um email com o link de download do plugin. Verifica a tua caixa de entrada.</p>
+                <p>O link de download do plugin foi enviado para o teu email.</p>
+                <p style="font-size: 0.9rem; color: #818cf8; margin-top: 10px;">
+                    📥 <strong>Download automático:</strong> 
+                    <a href="#" id="downloadLink" style="color: #818cf8; text-decoration: underline;">deepflow-plugin.zip</a>
+                </p>
                 <button class="btn btn-secondary" id="closeSuccessBtn" style="margin-top: 20px;">Fechar</button>
             </div>
         </div>
@@ -276,6 +270,7 @@
         const formContent = document.getElementById('formContent');
         const successMsg = document.getElementById('successMsg');
         const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+        const downloadLink = document.getElementById('downloadLink');
 
         // ===== ABRIR MODAL =====
         openModalBtn.addEventListener('click', function() {
@@ -287,7 +282,6 @@
         function closeModal() {
             modalOverlay.classList.remove('active');
             document.body.style.overflow = 'auto';
-            // Reset ao estado inicial
             formContent.style.display = 'block';
             successMsg.style.display = 'none';
             signupForm.reset();
@@ -296,12 +290,10 @@
         closeModalBtn.addEventListener('click', closeModal);
         closeSuccessBtn.addEventListener('click', closeModal);
 
-        // Fechar ao clicar fora do modal
         modalOverlay.addEventListener('click', function(e) {
             if (e.target === modalOverlay) closeModal();
         });
 
-        // Fechar com tecla ESC
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
         });
@@ -310,7 +302,6 @@
         signupForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Recolher dados
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const role = document.getElementById('role').value;
@@ -320,27 +311,27 @@
                 return;
             }
 
-            // Simular envio (aqui podes integrar com uma API real)
+            // Simular envio
             console.log('📨 Dados recolhidos:', { name, email, role });
 
             // Mostrar mensagem de sucesso
             formContent.style.display = 'none';
             successMsg.style.display = 'block';
 
-            // Opção: enviar para Google Forms (descomentar para usar)
-            /*
-            const formURL = 'https://docs.google.com/forms/d/e/[SEU_ID]/formResponse';
-            const formData = new FormData();
-            formData.append('entry.123456789', name); // substituir pelos IDs reais
-            formData.append('entry.987654321', email);
-            formData.append('entry.456789123', role);
-            
-            fetch(formURL, {
-                method: 'POST',
-                body: formData,
-                mode: 'no-cors'
+            // Simular download do plugin (como descrito no relatório)
+            downloadLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const blob = new Blob(['Deep-Flow Plugin - Versão Beta'], { type: 'application/zip' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'deepflow-plugin.zip';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                alert('📦 Download do plugin Deep-Flow iniciado!');
             });
-            */
         });
     </script>
 </body>
