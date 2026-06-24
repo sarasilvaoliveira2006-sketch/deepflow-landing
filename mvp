@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep-Flow — Protótipo MVP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0E14;
+    --bg-raised: #11151F;
+    --bg-deep: #070911;
+    --text: #F5F3EE;
+    --text-dim: #8B92A6;
+    --indigo: #7C9CFF;
+    --indigo-dim: #2d3566;
+    --green: #3DDC97;
+    --terracotta: #FF8A5C;
+    --line: #1F2433;
+    --display: 'Fraunces', serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: var(--body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 16px 60px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+  button:focus-visible, .stepper button:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+
+  /* ---- top label + back link ---- */
+  .proto-header { width: 100%; max-width: 980px; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; padding: 0 4px; flex-wrap: wrap; gap: 8px; }
+  .proto-title { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+  .proto-title b { color: var(--green); }
+  .proto-step-label { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+  .back-link { font-family: var(--mono); font-size: 12px; color: var(--indigo); text-decoration: none; border: 1px solid var(--indigo-dim); padding: 4px 14px; border-radius: 6px; transition: all .2s; }
+  .back-link:hover { background: rgba(124,156,255,0.08); border-color: var(--indigo); }
+
+  /* ---- stepper ---- */
+  .stepper { display: flex; gap: 8px; width: 100%; max-width: 980px; margin-bottom: 28px; }
+  .stepper button {
+    flex: 1; height: 4px; border-radius: 4px; background: var(--line); border: none; cursor: pointer; padding: 0;
+    position: relative; transition: background .25s;
+  }
+  .stepper button.active, .stepper button.done { background: var(--indigo); }
+  .stepper button.active { background: var(--green); }
+
+  /* ---- device frame ---- */
+  .device {
+    width: 100%; max-width: 980px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+    overflow: hidden;
+    min-height: 560px;
+    position: relative;
+  }
+  .device-bar { display: flex; align-items: center; gap: 8px; padding: 16px 22px; border-bottom: 1px solid var(--line); background: var(--bg-raised); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; } .dot.y { background: #febc2e; } .dot.g { background: #28c840; }
+  .device-bar .path { margin-left: 16px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+
+  .screen { padding: 52px 56px; min-height: 480px; display: none; animation: fadeIn .35s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 720px) { .screen { padding: 34px 22px; } }
+
+  .screen-eyebrow { font-family: var(--mono); font-size: 11px; color: var(--indigo); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+  .screen-title { font-family: var(--display); font-weight: 600; font-size: clamp(24px, 3vw, 32px); margin-bottom: 10px; }
+  .screen-sub { color: var(--text-dim); font-size: 15px; max-width: 520px; margin-bottom: 38px; }
+
+  /* ---- narrativa do utilizador (banner no topo de cada ecrã) ---- */
+  .user-story-banner {
+    background: var(--bg-raised);
+    border-left: 3px solid var(--green);
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin-bottom: 28px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .user-story-banner strong { color: var(--text); }
+  .user-story-banner .emoji { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ===== ECRÃ 1: Onboarding ===== */
+  .form-row { margin-bottom: 26px; max-width: 460px; }
+  .form-row label { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 10px; font-weight: 500; }
+  .pill-group { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pill {
+    font-family: var(--mono); font-size: 13px; padding: 10
