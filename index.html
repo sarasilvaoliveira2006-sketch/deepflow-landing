@@ -1,327 +1,127 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deep-Flow | Upskilling Inteligente</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            background: #0a0e1a; 
-            color: #fff; 
-            line-height: 1.6; 
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-        
-        .hero { text-align: center; padding: 60px 20px; }
-        .badge { 
-            display: inline-block; 
-            background: #1a1f36; 
-            padding: 8px 20px; 
-            border-radius: 50px; 
-            border: 1px solid #6366f1; 
-            color: #818cf8; 
-            font-size: 0.85rem; 
-            margin-bottom: 20px; 
-        }
-        .hero h1 { 
-            font-size: 3.5rem; 
-            font-weight: 800; 
-            background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            margin-bottom: 20px; 
-        }
-        .hero p { font-size: 1.3rem; color: #a5b4fc; max-width: 700px; margin: 0 auto 30px; }
-        .btn { 
-            display: inline-block; 
-            padding: 16px 48px; 
-            background: linear-gradient(135deg, #6366f1, #8b5cf6); 
-            color: #fff; 
-            font-weight: 700; 
-            border-radius: 50px; 
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem; 
-            transition: transform 0.3s, box-shadow 0.3s; 
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
-        }
-        .btn:hover { 
-            transform: scale(1.05); 
-            box-shadow: 0 6px 30px rgba(99, 102, 241, 0.5);
-        }
-        .btn-secondary { 
-            background: transparent; 
-            border: 2px solid #6366f1; 
-            box-shadow: none;
-            margin-top: 10px;
-            padding: 12px 30px;
-            font-size: 0.95rem;
-        }
-        .btn-secondary:hover { 
-            background: rgba(99, 102, 241, 0.1); 
-            box-shadow: none;
-        }
-        .sub-text { margin-top: 20px; font-size: 0.9rem; color: #6b7280; }
-        
-        .features { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-            gap: 30px; 
-            margin: 60px 0; 
-        }
-        .feature { 
-            background: #1a1f36; 
-            padding: 30px; 
-            border-radius: 16px; 
-            border: 1px solid #2d3566; 
-            transition: border-color 0.3s;
-        }
-        .feature:hover { border-color: #6366f1; }
-        .feature h3 { color: #818cf8; margin-bottom: 10px; }
-        .feature p { color: #9ca3af; }
-        
-        .footer { text-align: center; padding: 40px; color: #4b5563; border-top: 1px solid #1a1f36; margin-top: 40px; }
-        
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-overlay.active { display: flex; }
-        .modal {
-            background: #1a1f36;
-            border: 1px solid #2d3566;
-            border-radius: 24px;
-            padding: 50px 40px;
-            max-width: 480px;
-            width: 90%;
-            position: relative;
-            animation: slideUp 0.4s ease;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(40px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: #6b7280;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .modal-close:hover { color: #fff; }
-        .modal h2 { 
-            font-size: 1.8rem; 
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .modal p { color: #9ca3af; margin-bottom: 25px; }
-        .modal .form-group { margin-bottom: 16px; }
-        .modal label { display: block; color: #d1d5db; font-size: 0.9rem; margin-bottom: 6px; }
-        .modal input, .modal select {
-            width: 100%;
-            padding: 12px 16px;
-            background: #0a0e1a;
-            border: 1px solid #2d3566;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        .modal input:focus, .modal select:focus {
-            outline: none;
-            border-color: #6366f1;
-        }
-        .modal .btn {
-            width: 100%;
-            text-align: center;
-            margin-top: 10px;
-        }
-        .modal .success-msg {
-            display: none;
-            text-align: center;
-            padding: 20px 0;
-        }
-        .modal .success-msg .check {
-            font-size: 4rem;
-            margin-bottom: 10px;
-        }
-        .modal .success-msg h3 { color: #34d399; margin-bottom: 8px; }
-        .modal .success-msg p { color: #9ca3af; }
-
-        @media (max-width: 768px) { 
-            .hero h1 { font-size: 2.2rem; } 
-            .modal { padding: 30px 20px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep-Flow Dashboard</title>
+<style>
+  body { 
+    background: #0a0e1a; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    padding: 40px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .dashboard { 
+    background: #1a1f36; 
+    border-radius: 20px; 
+    padding: 35px; 
+    max-width: 850px; 
+    width: 100%; 
+    border: 1px solid #2d3566; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    color: #fff; 
+    font-size: 22px; 
+    font-weight: 600;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #2d3566;
+  }
+  .header .streak { color: #fcd34d; background: rgba(252, 211, 77, 0.1); padding: 8px 16px; border-radius: 12px; font-size: 18px; }
+  .row { display: flex; gap: 25px; margin-bottom: 25px; }
+  .card { 
+    background: #0f1322; 
+    border-radius: 16px; 
+    padding: 25px; 
+    flex: 1; 
+    border: 1px solid #2d3566; 
+    display: flex;
+    flex-direction: column;
+  }
+  .card h3 { color: #818cf8; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-top: 0; margin-bottom: 20px; }
+  .progress-circle { 
+    width: 130px; 
+    height: 130px; 
+    border-radius: 50%; 
+    border: 8px solid #6366f1; 
+    border-right-color: #2d3566; /* Cria efeito de carregamento */
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: #fff; 
+    font-size: 32px; 
+    font-weight: bold;
+    margin: 0 auto; 
+    transform: rotate(45deg);
+  }
+  .progress-circle span { transform: rotate(-45deg); }
+  .bar-chart { display: flex; align-items: flex-end; justify-content: space-between; height: 130px; margin-top: auto; }
+  .bar-wrapper { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+  .bar { background: linear-gradient(to top, #4f46e5, #818cf8); width: 35px; border-radius: 6px 6px 0 0; transition: height 0.3s ease; }
+  .bar-label { color: #9ca3af; font-size: 12px; font-weight: 500; }
+  .badges-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+  .badge { background: #1a1f36; border: 1px solid #2d3566; border-radius: 12px; padding: 15px; color: #d1d5db; font-size: 13px; display: flex; align-items: center; gap: 10px; }
+  .badge span { color: #fcd34d; font-weight: bold; }
+  .action-card { background: linear-gradient(145deg, #1e1b4b, #312e81); border: 1px solid #4f46e5; display: flex; justify-content: space-between; align-items: center; }
+  .action-card p { margin: 0; color: #e0e7ff; font-size: 16px; font-weight: 500; }
+  .btn { background: #6366f1; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+  .btn:hover { background: #4f46e5; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="hero">
-            <div class="badge">🚀 Micro-learning Assistido por IA</div>
-            <h1>Requalifica-te no fluxo do teu trabalho, não fora dele</h1>
-            <p>Transformamos janelas livres no teu calendário em progresso real de carreira. Micro-aprendizagem assistida por IA para profissionais sem tempo.</p>
-            
-            <button class="btn" id="openModalBtn">📦 Instalar Plugin e Iniciar Upskilling</button>
-            
-            <p class="sub-text">⚡ 5 minutos por dia · Gratuito para early adopters</p>
-        </div>
 
-        <div class="features">
-            <div class="feature">
-                <h3>🧠 Aprendizagem Invisível</h3>
-                <p>O Deep-Flow integra-se nas tuas ferramentas de trabalho. Aprende enquanto codas, analisas ou crias.</p>
-            </div>
-            <div class="feature">
-                <h3>⏱️ Micro-desafios de 10 min</h3>
-                <p>Unidades atómicas de aprendizagem que cabem entre reuniões. Sem necessidade de blocos de 2 horas.</p>
-            </div>
-            <div class="feature">
-                <h3>🎯 IA Adaptativa</h3>
-                <p>Ajuste dinâmico de dificuldade baseado no teu stress profissional e performance em tempo real.</p>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>Deep-Flow · Desenvolvido por <strong>Sarja</strong> · 2026</p>
-            <p style="font-size: 0.8rem; margin-top: 10px;">Projeto de Inovação e Empreendedorismo</p>
-        </div>
+<div class="dashboard">
+  <div class="header">
+    <div>🎯 Deep-Flow Mentor | <span style="color:#9ca3af; font-size:16px; font-weight:normal;">Visão Geral</span></div>
+    <div class="streak">🔥 Streak: 7 Dias</div>
+  </div>
+  
+  <div class="row">
+    <div class="card" style="flex: 0.8;">
+      <h3>Progresso Alvo</h3>
+      <div class="progress-circle"><span>68%</span></div>
+      <p style="text-align:center; color:#9ca3af; font-size:14px; margin-top:20px; font-weight:500;">Prompt Engineering</p>
     </div>
 
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
-            <button class="modal-close" id="closeModalBtn">✕</button>
-            
-            <div id="formContent">
-                <h2>🚀 Começa agora o teu upskilling</h2>
-                <p>Inscreve-te para seres um dos primeiros a experimentar o Deep-Flow. Gratuito para early adopters.</p>
-                
-                <form id="signupForm">
-                    <div class="form-group">
-                        <label for="name">Nome completo</label>
-                        <input type="text" id="name" placeholder="Ex: João Silva" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email profissional</label>
-                        <input type="email" id="email" placeholder="ex: joao@empresa.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="role">Área de atuação</label>
-                        <select id="role" required>
-                            <option value="">Seleciona...</option>
-                            <option value="developer">Desenvolvedor(a)</option>
-                            <option value="data">Engenheiro(a) de Dados</option>
-                            <option value="analytics">Analista de Dados</option>
-                            <option value="devops">DevOps / Cloud</option>
-                            <option value="product">Product Manager</option>
-                            <option value="other">Outro</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn">📥 Instalar Plugin Agora</button>
-                </form>
-                <p style="font-size: 0.8rem; color: #6b7280; margin-top: 12px; text-align: center;">
-                    🔒 Os teus dados estão seguros. Sem spam.
-                </p>
-            </div>
-
-            <div class="success-msg" id="successMsg">
-                <div class="check">✅</div>
-                <h3>Inscrição confirmada!</h3>
-                <p>O link de download do plugin foi enviado para o teu email.</p>
-                <p style="font-size: 0.9rem; color: #818cf8; margin-top: 10px;">
-                    📥 <strong>Download automático:</strong> 
-                    <a href="#" id="downloadLink" style="color: #818cf8; text-decoration: underline;">deepflow-plugin.zip</a>
-                </p>
-                <button class="btn btn-secondary" id="closeSuccessBtn" style="margin-top: 20px;">Fechar</button>
-            </div>
-        </div>
+    <div class="card" style="flex: 1.5;">
+      <h3>Minutos Investidos no Fluxo (Semana)</h3>
+      <div class="bar-chart">
+        <div class="bar-wrapper"><div class="bar" style="height:40px;"></div><div class="bar-label">Seg</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height:60px;"></div><div class="bar-label">Ter</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height:80px;"></div><div class="bar-label">Qua</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height:30px;"></div><div class="bar-label">Qui</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height:70px;"></div><div class="bar-label">Sex</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height:50px;"></div><div class="bar-label">Sáb</div></div>
+        <div class="bar-wrapper"><div class="bar" style="height:20px; background: #374151;"></div><div class="bar-label">Dom</div></div>
+      </div>
     </div>
+  </div>
+  
+  <div class="card" style="margin-bottom: 25px;">
+    <h3>🏆 Conquistas Desbloqueadas</h3>
+    <div class="badges-container">
+      <div class="badge">✅ <div><span>Foco Total</span><br>7 dias seguidos</div></div>
+      <div class="badge">✅ <div><span>Mestre da Integração</span><br>15 Desafios no VS Code</div></div>
+      <div class="badge">✅ <div><span>Resiliência</span><br>100 min em micro-pausas</div></div>
+    </div>
+  </div>
+  
+  <div class="card action-card">
+    <div>
+      <h3 style="color: #a5b4fc; margin-bottom: 8px;">🧠 Micro-Desafio Pendente (10 min)</h3>
+      <p>Refatorização de Query SQL</p>
+    </div>
+    <button class="btn">▶ Injetar no IDE</button>
+  </div>
+</div>
 
-    <script>
-        const modalOverlay = document.getElementById('modalOverlay');
-        const openModalBtn = document.getElementById('openModalBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const signupForm = document.getElementById('signupForm');
-        const formContent = document.getElementById('formContent');
-        const successMsg = document.getElementById('successMsg');
-        const closeSuccessBtn = document.getElementById('closeSuccessBtn');
-        const downloadLink = document.getElementById('downloadLink');
-
-        openModalBtn.addEventListener('click', function() {
-            modalOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        function closeModal() {
-            modalOverlay.classList.remove('active');
-            document.body.style.overflow = 'auto';
-            formContent.style.display = 'block';
-            successMsg.style.display = 'none';
-            signupForm.reset();
-        }
-
-        closeModalBtn.addEventListener('click', closeModal);
-        closeSuccessBtn.addEventListener('click', closeModal);
-
-        modalOverlay.addEventListener('click', function(e) {
-            if (e.target === modalOverlay) closeModal();
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeModal();
-        });
-
-        signupForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const role = document.getElementById('role').value;
-
-            if (!name || !email || !role) {
-                alert('Por favor, preenche todos os campos.');
-                return;
-            }
-
-            console.log('📨 Dados recolhidos:', { name, email, role });
-
-            formContent.style.display = 'none';
-            successMsg.style.display = 'block';
-
-            downloadLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                const blob = new Blob(['Deep-Flow Plugin - Versão Beta'], { type: 'application/zip' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'deepflow-plugin.zip';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                alert('📦 Download do plugin Deep-Flow iniciado!');
-            });
-        });
-    </script>
 </body>
 </html>
