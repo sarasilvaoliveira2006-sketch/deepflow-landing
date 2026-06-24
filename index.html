@@ -23,7 +23,9 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
   html { scroll-behavior: smooth; }
+
   body {
     background: var(--bg);
     color: var(--text);
@@ -31,10 +33,13 @@
     line-height: 1.5;
     overflow-x: hidden;
   }
+
   @media (prefers-reduced-motion: reduce) {
     * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   }
+
   a:focus-visible, button:focus-visible { outline: 2px solid var(--indigo); outline-offset: 3px; }
+
   .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
 
   /* ---------- NAV ---------- */
@@ -99,21 +104,6 @@
   .timer-caption { font-family: var(--mono); font-size: 13px; color: var(--text-dim); text-align: center; max-width: 220px; }
   .timer-caption b { color: var(--text); font-weight: 500; }
 
-  /* ========== SECÇÃO: BENEFÍCIOS ========== */
-  .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 20px; }
-  .benefit-card {
-    background: var(--bg-raised);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 30px 28px;
-    transition: border-color .25s, transform .2s;
-  }
-  .benefit-card:hover { border-color: var(--indigo); transform: translateY(-2px); }
-  .benefit-icon { font-size: 28px; margin-bottom: 14px; display: block; }
-  .benefit-card h3 { font-family: var(--display); font-size: 20px; font-weight: 500; margin-bottom: 8px; }
-  .benefit-card p { color: var(--text-dim); font-size: 15px; line-height: 1.6; }
-  @media (max-width: 720px) { .benefits-grid { grid-template-columns: 1fr; } }
-
   /* ---------- FRICTION (before/after) ---------- */
   .section { padding: 90px 0; }
   .section-head { max-width: 640px; margin-bottom: 56px; }
@@ -138,6 +128,19 @@
   .stat-num { font-family: var(--mono); font-size: 30px; color: var(--indigo); font-weight: 600; }
   .stat-cap { font-size: 13px; color: var(--text-dim); margin-top: 8px; line-height: 1.4; }
   @media (max-width: 720px) { .stat-row { grid-template-columns: 1fr; } }
+
+  /* ---------- BENEFITS ---------- */
+  .benefits-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media (max-width: 800px) { .benefits-cols { grid-template-columns: 1fr; } }
+  .benefit-group { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 16px; padding: 32px; }
+  .benefit-group-tag { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px; display: inline-block; }
+  .benefit-group.user .benefit-group-tag { color: var(--indigo); }
+  .benefit-group.biz .benefit-group-tag { color: var(--green); }
+  .benefit-item { display: flex; gap: 14px; padding: 16px 0; border-top: 1px solid var(--line); }
+  .benefit-item:first-of-type { border-top: none; }
+  .benefit-icon { font-size: 18px; line-height: 1; flex-shrink: 0; padding-top: 2px; }
+  .benefit-item h4 { font-family: var(--display); font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+  .benefit-item p { font-size: 14px; color: var(--text-dim); line-height: 1.5; }
 
   /* ---------- HOW IT WORKS ---------- */
   .flow-list { display: flex; flex-direction: column; }
@@ -179,7 +182,7 @@
       <a href="#como-funciona">Como funciona</a>
       <a href="#comparacao">Comparação</a>
     </div>
-    <a href="mvp.html" class="nav-cta">▶ Instalar Plugin</a>
+    <a href="mvp.html" class="nav-cta">Ver Demonstração MVP</a>
   </div>
 </nav>
 
@@ -190,8 +193,8 @@
       <h1 class="headline">Requalifica-te <em>no fluxo</em> do teu trabalho, não fora dele.</h1>
       <p class="sub">Transformamos as janelas livres no teu calendário em progresso real de carreira. Sem portais de cursos, sem blocos de duas horas — só os 10 minutos que já tens entre reuniões.</p>
       <div class="hero-ctas">
-        <a href="mvp.html" class="btn-primary">▶ Instalar Plugin e Iniciar Upskilling</a>
-        <a href="#como-funciona" class="btn-ghost">Ver como funciona</a>
+        <a href="mvp.html" class="btn-primary">▶ Experimentar o Protótipo MVP</a>
+        <a href="#beneficios" class="btn-ghost">Ver benefícios</a>
       </div>
     </div>
     <div class="timer-stage">
@@ -210,29 +213,45 @@
   </div>
 </section>
 
-<!-- ========== BENEFÍCIOS PRINCIPAIS ========== -->
-<section class="section" id="beneficios" style="padding-top:20px;">
+<section class="section" id="beneficios">
   <div class="wrap">
     <div class="section-head">
-      <div class="section-eyebrow" style="color:var(--green);">Benefícios principais</div>
-      <h2 class="section-title">Aprendizagem que se adapta ao teu dia, não ao contrário.</h2>
-      <p class="section-body">Deep-Flow foi desenhado para profissionais que não podem parar — e que precisam de evoluir sem sair do ritmo de produção.</p>
+      <div class="section-eyebrow">Proposta de valor</div>
+      <h2 class="section-title">Benefícios principais.</h2>
+      <p class="section-body">Para o profissional, a aprendizagem deixa de competir pelo tempo. Para a organização, a requalificação deixa de competir pela produtividade.</p>
     </div>
-    <div class="benefits-grid">
-      <div class="benefit-card">
-        <span class="benefit-icon">🧠</span>
-        <h3>Minimização da Sobrecarga Cognitiva</h3>
-        <p>Distribuição do esforço de aprendizagem em micro-doses, eliminando a frustração de percursos genéricos e extensos.</p>
+
+    <div class="benefits-cols">
+      <div class="benefit-group user">
+        <span class="benefit-group-tag">Para o profissional</span>
+        <div class="benefit-item">
+          <span class="benefit-icon">🧩</span>
+          <div><h4>Sem sobrecarga cognitiva</h4><p>O esforço é distribuído em micro-doses de 5 a 10 minutos, eliminando a frustração de percursos genéricos e extensos.</p></div>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-icon">🎯</span>
+          <div><h4>Personalização adaptativa</h4><p>O nível de dificuldade ajusta-se em tempo real à performance e ao perfil cognitivo de cada utilizador.</p></div>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-icon">📈</span>
+          <div><h4>Evolução sem interrupção</h4><p>Cada hiato produtivo converte-se em capital intelectual — progressão de carreira sem sair do fluxo de trabalho.</p></div>
+        </div>
       </div>
-      <div class="benefit-card">
-        <span class="benefit-icon">🎯</span>
-        <h3>Personalização Adaptativa</h3>
-        <p>Ajuste constante do nível de dificuldade baseado na performance em tempo real e no perfil cognitivo do utilizador.</p>
-      </div>
-      <div class="benefit-card">
-        <span class="benefit-icon">🚀</span>
-        <h3>Evolução Sem Interrupção</h3>
-        <p>Progressão de carreira tangível através da conversão de hiatos produtivos em capital intelectual aplicável imediatamente.</p>
+
+      <div class="benefit-group biz">
+        <span class="benefit-group-tag">Para a organização</span>
+        <div class="benefit-item">
+          <span class="benefit-icon">📊</span>
+          <div><h4>ROI de formação exponencial</h4><p>Maior taxa de conclusão e transferência imediata de competências para a produção ativa.</p></div>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-icon">🤝</span>
+          <div><h4>Retenção de talento</h4><p>Mitiga o burnout associado à atualização constante, respeitando a ecologia temporal do colaborador.</p></div>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-icon">🔗</span>
+          <div><h4>Fecho dinâmico de skill gaps</h4><p>Alinhamento contínuo entre a visão tecnológica da empresa e as competências práticas da equipa.</p></div>
+        </div>
       </div>
     </div>
   </div>
@@ -374,7 +393,7 @@
     <h2>A tua próxima competência cabe nos próximos 10 minutos.</h2>
     <p class="sub" style="margin-left:auto;margin-right:auto;">Instala o plugin, define o teu objetivo, e deixa o Deep-Flow encontrar a janela certa no teu dia.</p>
     <div class="hero-ctas">
-      <a href="mvp.html" class="btn-primary">▶ Instalar Plugin e Iniciar Upskilling</a>
+      <a href="mvp.html" class="btn-primary">▶ Experimentar o MVP Agora</a>
     </div>
   </div>
 </section>
@@ -382,7 +401,7 @@
 <footer>
   <div class="wrap">
     <span>Deep-Flow · Projeto Sarja · PGI, FCTUC</span>
-    <a href="mvp.html">▶ Experimentar o MVP</a>
+    <a href="mvp.html">Ver demonstração funcional →</a>
   </div>
 </footer>
 
