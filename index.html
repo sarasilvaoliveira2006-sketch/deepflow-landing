@@ -3,125 +3,388 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deep-Flow Dashboard</title>
+<title>Deep-Flow — Requalifica-te no fluxo do teu trabalho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  body { 
-    background: #0a0e1a; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    padding: 40px; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
+  :root {
+    --bg: #0B0E14;
+    --bg-raised: #11151F;
+    --text: #F5F3EE;
+    --text-dim: #8B92A6;
+    --indigo: #7C9CFF;
+    --green: #3DDC97;
+    --terracotta: #FF8A5C;
+    --line: #1F2433;
+    --display: 'Fraunces', serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
   }
-  .dashboard { 
-    background: #1a1f36; 
-    border-radius: 20px; 
-    padding: 35px; 
-    max-width: 850px; 
-    width: 100%; 
-    border: 1px solid #2d3566; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    line-height: 1.5;
+    overflow-x: hidden;
   }
-  .header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    color: #fff; 
-    font-size: 22px; 
-    font-weight: 600;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #2d3566;
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   }
-  .header .streak { color: #fcd34d; background: rgba(252, 211, 77, 0.1); padding: 8px 16px; border-radius: 12px; font-size: 18px; }
-  .row { display: flex; gap: 25px; margin-bottom: 25px; }
-  .card { 
-    background: #0f1322; 
-    border-radius: 16px; 
-    padding: 25px; 
-    flex: 1; 
-    border: 1px solid #2d3566; 
-    display: flex;
-    flex-direction: column;
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--indigo); outline-offset: 3px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+  /* ---------- NAV ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(11,14,20,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
   }
-  .card h3 { color: #818cf8; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-top: 0; margin-bottom: 20px; }
-  .progress-circle { 
-    width: 130px; 
-    height: 130px; 
-    border-radius: 50%; 
-    border: 8px solid #6366f1; 
-    border-right-color: #2d3566; /* Cria efeito de carregamento */
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    color: #fff; 
-    font-size: 32px; 
-    font-weight: bold;
-    margin: 0 auto; 
-    transform: rotate(45deg);
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .logo { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px; }
+  .logo-mark { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
+  .nav-links { display: flex; gap: 36px; font-size: 14px; color: var(--text-dim); }
+  .nav-links a { color: inherit; text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--indigo); color: #0B0E14; font-weight: 600; font-size: 14px;
+    padding: 10px 20px; border-radius: 8px; text-decoration: none; transition: transform .15s, background .2s;
   }
-  .progress-circle span { transform: rotate(-45deg); }
-  .bar-chart { display: flex; align-items: flex-end; justify-content: space-between; height: 130px; margin-top: auto; }
-  .bar-wrapper { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
-  .bar { background: linear-gradient(to top, #4f46e5, #818cf8); width: 35px; border-radius: 6px 6px 0 0; transition: height 0.3s ease; }
-  .bar-label { color: #9ca3af; font-size: 12px; font-weight: 500; }
-  .badges-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
-  .badge { background: #1a1f36; border: 1px solid #2d3566; border-radius: 12px; padding: 15px; color: #d1d5db; font-size: 13px; display: flex; align-items: center; gap: 10px; }
-  .badge span { color: #fcd34d; font-weight: bold; }
-  .action-card { background: linear-gradient(145deg, #1e1b4b, #312e81); border: 1px solid #4f46e5; display: flex; justify-content: space-between; align-items: center; }
-  .action-card p { margin: 0; color: #e0e7ff; font-size: 16px; font-weight: 500; }
-  .btn { background: #6366f1; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-  .btn:hover { background: #4f46e5; }
+  .nav-cta:hover { background: #93AAFF; transform: translateY(-1px); }
+  @media (max-width: 720px) { .nav-links { display: none; } }
+
+  /* ---------- HERO ---------- */
+  .hero { padding: 96px 0 110px; position: relative; }
+  .hero .wrap { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 64px; align-items: center; }
+  @media (max-width: 880px) { .hero .wrap { grid-template-columns: 1fr; } .hero { padding: 56px 0 72px; } }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--green); display: flex; align-items: center; gap: 10px; margin-bottom: 22px;
+  }
+  .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--green); }
+
+  h1.headline {
+    font-family: var(--display); font-weight: 600; font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.08; letter-spacing: -0.01em; color: var(--text); margin-bottom: 26px;
+  }
+  h1.headline em { font-style: italic; color: var(--indigo); }
+
+  .sub { font-size: 18px; color: var(--text-dim); max-width: 480px; margin-bottom: 36px; }
+
+  .hero-ctas { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--indigo); color: #0B0E14; font-weight: 600; font-size: 15px;
+    padding: 15px 26px; border-radius: 9px; text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
+    transition: transform .15s, box-shadow .2s; border: none; cursor: pointer;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,156,255,0.28); }
+  .btn-ghost { color: var(--text-dim); font-size: 14px; text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; transition: color .2s, border-color .2s; }
+  .btn-ghost:hover { color: var(--text); border-color: var(--text-dim); }
+
+  /* ---- timer signature ---- */
+  .timer-stage { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .timer-wrap { position: relative; width: 260px; height: 260px; }
+  .timer-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .timer-track { fill: none; stroke: var(--line); stroke-width: 10; }
+  .timer-progress { fill: none; stroke: var(--indigo); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 691; stroke-dashoffset: 691; animation: fillTimer 9s ease-in-out infinite; }
+  @keyframes fillTimer { 0% { stroke-dashoffset: 691; stroke: var(--indigo); } 85% { stroke-dashoffset: 0; stroke: var(--green); } 100% { stroke-dashoffset: 0; stroke: var(--green); } }
+  .timer-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .timer-num { font-family: var(--mono); font-size: 46px; font-weight: 600; color: var(--text); }
+  .timer-label { font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+  .timer-caption { font-family: var(--mono); font-size: 13px; color: var(--text-dim); text-align: center; max-width: 220px; }
+  .timer-caption b { color: var(--text); font-weight: 500; }
+
+  /* ========== SECÇÃO: BENEFÍCIOS ========== */
+  .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 20px; }
+  .benefit-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 30px 28px;
+    transition: border-color .25s, transform .2s;
+  }
+  .benefit-card:hover { border-color: var(--indigo); transform: translateY(-2px); }
+  .benefit-icon { font-size: 28px; margin-bottom: 14px; display: block; }
+  .benefit-card h3 { font-family: var(--display); font-size: 20px; font-weight: 500; margin-bottom: 8px; }
+  .benefit-card p { color: var(--text-dim); font-size: 15px; line-height: 1.6; }
+  @media (max-width: 720px) { .benefits-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- FRICTION (before/after) ---------- */
+  .section { padding: 90px 0; }
+  .section-head { max-width: 640px; margin-bottom: 56px; }
+  .section-eyebrow { font-family: var(--mono); font-size: 12px; color: var(--terracotta); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+  h2.section-title { font-family: var(--display); font-size: clamp(28px, 3.4vw, 38px); font-weight: 600; line-height: 1.15; color: var(--text); }
+  .section-body { color: var(--text-dim); font-size: 16px; margin-top: 16px; max-width: 560px; }
+
+  .friction-compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .friction-col { padding: 36px; }
+  .friction-col.before { background: var(--bg-raised); }
+  .friction-col.after { background: linear-gradient(160deg, rgba(124,156,255,0.08), transparent); }
+  .friction-divider { width: 1px; background: var(--line); }
+  .friction-tag { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 18px; display: inline-block; }
+  .friction-col.before .friction-tag { color: var(--text-dim); }
+  .friction-col.after .friction-tag { color: var(--green); }
+  .friction-col h3 { font-family: var(--display); font-size: 22px; font-weight: 500; margin-bottom: 14px; }
+  .friction-col p { color: var(--text-dim); font-size: 15px; line-height: 1.6; }
+  @media (max-width: 720px) { .friction-compare { grid-template-columns: 1fr; } .friction-divider { width: 100%; height: 1px; } }
+
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); margin-top: 48px; border-radius: 14px; overflow: hidden; }
+  .stat-item { background: var(--bg-raised); padding: 28px 24px; }
+  .stat-num { font-family: var(--mono); font-size: 30px; color: var(--indigo); font-weight: 600; }
+  .stat-cap { font-size: 13px; color: var(--text-dim); margin-top: 8px; line-height: 1.4; }
+  @media (max-width: 720px) { .stat-row { grid-template-columns: 1fr; } }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .flow-list { display: flex; flex-direction: column; }
+  .flow-row { display: grid; grid-template-columns: 64px 1fr; gap: 28px; padding: 28px 0; border-top: 1px solid var(--line); }
+  .flow-row:first-child { border-top: none; }
+  .flow-idx { font-family: var(--mono); font-size: 13px; color: var(--text-dim); padding-top: 4px; }
+  .flow-title { font-family: var(--display); font-size: 20px; font-weight: 500; margin-bottom: 6px; }
+  .flow-desc { color: var(--text-dim); font-size: 15px; max-width: 560px; }
+
+  /* ---------- COMPETITORS ---------- */
+  table.compare { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.compare th { text-align: left; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); padding: 0 18px 16px; border-bottom: 1px solid var(--line); }
+  table.compare td { padding: 20px 18px; border-bottom: 1px solid var(--line); color: var(--text-dim); vertical-align: top; }
+  table.compare td.name { color: var(--text); font-weight: 600; font-family: var(--display); font-size: 16px; }
+  table.compare tr.deepflow td { color: var(--text); }
+  table.compare tr.deepflow td.name { color: var(--green); }
+  .compare-wrap { overflow-x: auto; }
+  @media (max-width: 720px) { table.compare { min-width: 640px; } }
+
+  /* ---------- CTA FINAL ---------- */
+  .cta-final { padding: 110px 0 120px; text-align: center; position: relative; }
+  .cta-final h2 { font-family: var(--display); font-size: clamp(30px, 4.6vw, 48px); font-weight: 600; max-width: 700px; margin: 0 auto 18px; line-height: 1.12; }
+  .cta-final .sub { margin: 0 auto 40px; }
+  .cta-final .hero-ctas { justify-content: center; }
+
+  footer { border-top: 1px solid var(--line); padding: 36px 0; }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; color: var(--text-dim); font-size: 13px; }
+  footer a { color: var(--text-dim); text-decoration: none; }
 </style>
 </head>
 <body>
 
-<div class="dashboard">
-  <div class="header">
-    <div>🎯 Deep-Flow Mentor | <span style="color:#9ca3af; font-size:16px; font-weight:normal;">Visão Geral</span></div>
-    <div class="streak">🔥 Streak: 7 Dias</div>
-  </div>
-  
-  <div class="row">
-    <div class="card" style="flex: 0.8;">
-      <h3>Progresso Alvo</h3>
-      <div class="progress-circle"><span>68%</span></div>
-      <p style="text-align:center; color:#9ca3af; font-size:14px; margin-top:20px; font-weight:500;">Prompt Engineering</p>
+<nav>
+  <div class="wrap">
+    <div class="logo"><span class="logo-mark"></span>Deep-Flow</div>
+    <div class="nav-links">
+      <a href="#beneficios">Benefícios</a>
+      <a href="#problema">Problema</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#comparacao">Comparação</a>
     </div>
+    <a href="mvp.html" class="nav-cta">▶ Instalar Plugin</a>
+  </div>
+</nav>
 
-    <div class="card" style="flex: 1.5;">
-      <h3>Minutos Investidos no Fluxo (Semana)</h3>
-      <div class="bar-chart">
-        <div class="bar-wrapper"><div class="bar" style="height:40px;"></div><div class="bar-label">Seg</div></div>
-        <div class="bar-wrapper"><div class="bar" style="height:60px;"></div><div class="bar-label">Ter</div></div>
-        <div class="bar-wrapper"><div class="bar" style="height:80px;"></div><div class="bar-label">Qua</div></div>
-        <div class="bar-wrapper"><div class="bar" style="height:30px;"></div><div class="bar-label">Qui</div></div>
-        <div class="bar-wrapper"><div class="bar" style="height:70px;"></div><div class="bar-label">Sex</div></div>
-        <div class="bar-wrapper"><div class="bar" style="height:50px;"></div><div class="bar-label">Sáb</div></div>
-        <div class="bar-wrapper"><div class="bar" style="height:20px; background: #374151;"></div><div class="bar-label">Dom</div></div>
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Mentor de micro-aprendizagem assistido por IA</div>
+      <h1 class="headline">Requalifica-te <em>no fluxo</em> do teu trabalho, não fora dele.</h1>
+      <p class="sub">Transformamos as janelas livres no teu calendário em progresso real de carreira. Sem portais de cursos, sem blocos de duas horas — só os 10 minutos que já tens entre reuniões.</p>
+      <div class="hero-ctas">
+        <a href="mvp.html" class="btn-primary">▶ Instalar Plugin e Iniciar Upskilling</a>
+        <a href="#como-funciona" class="btn-ghost">Ver como funciona</a>
+      </div>
+    </div>
+    <div class="timer-stage">
+      <div class="timer-wrap">
+        <svg viewBox="0 0 240 240">
+          <circle class="timer-track" cx="120" cy="120" r="110"></circle>
+          <circle class="timer-progress" cx="120" cy="120" r="110"></circle>
+        </svg>
+        <div class="timer-center">
+          <div class="timer-num">10:00</div>
+          <div class="timer-label">min disponíveis</div>
+        </div>
+      </div>
+      <div class="timer-caption">Entre esta reunião e a próxima, o Deep-Flow encontra <b>uma competência</b> que cabe exatamente aqui.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== BENEFÍCIOS PRINCIPAIS ========== -->
+<section class="section" id="beneficios" style="padding-top:20px;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow" style="color:var(--green);">Benefícios principais</div>
+      <h2 class="section-title">Aprendizagem que se adapta ao teu dia, não ao contrário.</h2>
+      <p class="section-body">Deep-Flow foi desenhado para profissionais que não podem parar — e que precisam de evoluir sem sair do ritmo de produção.</p>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <span class="benefit-icon">🧠</span>
+        <h3>Minimização da Sobrecarga Cognitiva</h3>
+        <p>Distribuição do esforço de aprendizagem em micro-doses, eliminando a frustração de percursos genéricos e extensos.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-icon">🎯</span>
+        <h3>Personalização Adaptativa</h3>
+        <p>Ajuste constante do nível de dificuldade baseado na performance em tempo real e no perfil cognitivo do utilizador.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-icon">🚀</span>
+        <h3>Evolução Sem Interrupção</h3>
+        <p>Progressão de carreira tangível através da conversão de hiatos produtivos em capital intelectual aplicável imediatamente.</p>
       </div>
     </div>
   </div>
-  
-  <div class="card" style="margin-bottom: 25px;">
-    <h3>🏆 Conquistas Desbloqueadas</h3>
-    <div class="badges-container">
-      <div class="badge">✅ <div><span>Foco Total</span><br>7 dias seguidos</div></div>
-      <div class="badge">✅ <div><span>Mestre da Integração</span><br>15 Desafios no VS Code</div></div>
-      <div class="badge">✅ <div><span>Resiliência</span><br>100 min em micro-pausas</div></div>
+</section>
+
+<section class="section" id="problema">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">O problema · Fricção Temporal</div>
+      <h2 class="section-title">A formação tradicional exige tempo que o profissional de dados já não tem.</h2>
+      <p class="section-body">Portugal enfrenta um desfasamento estrutural entre o ritmo de produção e o ritmo de requalificação — agravado por assimetrias de literacia digital e por um ensino superior que ainda não definiu regras claras para a IA.</p>
+    </div>
+
+    <div class="friction-compare">
+      <div class="friction-col before">
+        <span class="friction-tag">Modelo Rígido</span>
+        <h3>Curso tradicional</h3>
+        <p>Inscrição num curso externo, blocos de 1 a 2 horas, consumo passivo de vídeo isolado da tarefa real. O abandono acontece porque essa janela de tempo concentrado simplesmente não existe na agenda do profissional.</p>
+      </div>
+      <div class="friction-divider"></div>
+      <div class="friction-col after">
+        <span class="friction-tag">Deep-Flow</span>
+        <h3>Micro-aprendizagem just-in-time</h3>
+        <p>O sistema monitoriza janelas de oportunidade no calendário e injeta um desafio prático de 5 a 10 minutos diretamente na ferramenta de trabalho — VS Code, Excel — exatamente quando há espaço para o absorver.</p>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-num">17</div>
+        <div class="stat-cap">instituições de ensino superior em Portugal com diretrizes claras para uso de IA (Público, 2026)</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5–10</div>
+        <div class="stat-cap">minutos: a unidade atómica de competência que o Deep-Flow injeta no fluxo de trabalho</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-cap">portais externos abertos — a aprendizagem ocorre dentro da própria ferramenta técnica</div>
+      </div>
     </div>
   </div>
-  
-  <div class="card action-card">
-    <div>
-      <h3 style="color: #a5b4fc; margin-bottom: 8px;">🧠 Micro-Desafio Pendente (10 min)</h3>
-      <p>Refatorização de Query SQL</p>
+</section>
+
+<section class="section" id="como-funciona">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Como funciona</div>
+      <h2 class="section-title">Do atraso tecnológico à maestria no fluxo.</h2>
+      <p class="section-body">Um Engenheiro de Dados sente-se marginalizado pela rápida adoção de novas bibliotecas de IA — e não encontra as duas horas livres que um curso tradicional exige. Com o Deep-Flow, a requalificação deixa de ser um evento externo.</p>
     </div>
-    <button class="btn">▶ Injetar no IDE</button>
+
+    <div class="flow-list">
+      <div class="flow-row">
+        <div class="flow-idx">01</div>
+        <div>
+          <div class="flow-title">Onboarding de objetivo</div>
+          <div class="flow-desc">Configuras a competência-alvo — por exemplo, Prompt Engineering — e a tua disponibilidade temporal real ao longo da semana.</div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-idx">02</div>
+        <div>
+          <div class="flow-title">Janela de oportunidade</div>
+          <div class="flow-desc">O sistema deteta um hiato livre no calendário e notifica: "Tens 10 minutos livres; queres praticar X?"</div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-idx">03</div>
+        <div>
+          <div class="flow-title">Micro-desafio contextual</div>
+          <div class="flow-desc">A tarefa prática é injetada diretamente no plugin da tua ferramenta de trabalho — sem sair do VS Code ou do Excel.</div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-idx">04</div>
+        <div>
+          <div class="flow-title">Feedback conversacional</div>
+          <div class="flow-desc">O mentor de IA identifica erros lógicos em tempo real e sugere a refatoração imediata, como um colega sénior ao lado.</div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-idx">05</div>
+        <div>
+          <div class="flow-title">Streak cognitivo</div>
+          <div class="flow-desc">O progresso acumula-se num dashboard de continuidade — visualizas o teu avanço e a prontidão para a próxima unidade.</div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
+
+<section class="section" id="comparacao">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Análise competitiva</div>
+      <h2 class="section-title">De "plataforma de cursos" a assistente de performance.</h2>
+      <p class="section-body">Os concorrentes diretos resolvem parte do problema — mas nenhum integra a aprendizagem no próprio fluxo de trabalho técnico.</p>
+    </div>
+
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Solução</th>
+            <th>Ponto forte</th>
+            <th>Lacuna</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="name">Coursera AI Coach</td>
+            <td>Prestígio académico; curadoria de vídeo com IA</td>
+            <td>Desconexão contextual — exige isolar-se da tarefa produtiva</td>
+          </tr>
+          <tr>
+            <td class="name">Sana Labs</td>
+            <td>Interface high-end; gestão de conhecimento interno</td>
+            <td>Foco em recuperação (search), fraco em aquisição externa de competências</td>
+          </tr>
+          <tr>
+            <td class="name">LinkedIn Learning</td>
+            <td>Rede profissional integrada; biblioteca vasta</td>
+            <td>Consumo passivo — sugestões por keywords, ignoram lacunas práticas reais</td>
+          </tr>
+          <tr class="deepflow">
+            <td class="name">Deep-Flow</td>
+            <td>Invisible Learning — integração orgânica no IDE, com Dynamic Pacing e gamificação de baixa fricção</td>
+            <td>Assistência técnica imediata, no próprio fluxo de trabalho</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final" id="instalar">
+  <div class="wrap">
+    <h2>A tua próxima competência cabe nos próximos 10 minutos.</h2>
+    <p class="sub" style="margin-left:auto;margin-right:auto;">Instala o plugin, define o teu objetivo, e deixa o Deep-Flow encontrar a janela certa no teu dia.</p>
+    <div class="hero-ctas">
+      <a href="mvp.html" class="btn-primary">▶ Instalar Plugin e Iniciar Upskilling</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Deep-Flow · Projeto Sarja · PGI, FCTUC</span>
+    <a href="mvp.html">▶ Experimentar o MVP</a>
+  </div>
+</footer>
 
 </body>
 </html>
