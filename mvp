@@ -39,13 +39,24 @@
   }
   button:focus-visible, .stepper button:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
 
-  /* ---- top label + back link ---- */
-  .proto-header { width: 100%; max-width: 980px; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; padding: 0 4px; flex-wrap: wrap; gap: 8px; }
+  /* ---- top label ---- */
+  .proto-header { width: 100%; max-width: 980px; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; padding: 0 4px; }
   .proto-title { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
   .proto-title b { color: var(--green); }
   .proto-step-label { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
-  .back-link { font-family: var(--mono); font-size: 12px; color: var(--indigo); text-decoration: none; border: 1px solid var(--indigo-dim); padding: 4px 14px; border-radius: 6px; transition: all .2s; }
-  .back-link:hover { background: rgba(124,156,255,0.08); border-color: var(--indigo); }
+  .back-link { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 14px; transition: color .2s; }
+  .back-link:hover { color: var(--text); }
+
+  /* ---- persona / narrative banner ---- */
+  .persona-banner {
+    width: 100%; max-width: 980px; display: flex; gap: 16px; align-items: flex-start;
+    background: var(--bg-raised); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 20px; margin-bottom: 22px;
+  }
+  .persona-avatar { width: 36px; height: 36px; border-radius: 9px; background: rgba(124,156,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+  .persona-text { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+  .persona-text b { color: var(--text); font-weight: 600; }
+  .persona-text .stage { font-family: var(--mono); font-size: 11px; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
 
   /* ---- stepper ---- */
   .stepper { display: flex; gap: 8px; width: 100%; max-width: 980px; margin-bottom: 28px; }
@@ -81,26 +92,345 @@
   .screen-title { font-family: var(--display); font-weight: 600; font-size: clamp(24px, 3vw, 32px); margin-bottom: 10px; }
   .screen-sub { color: var(--text-dim); font-size: 15px; max-width: 520px; margin-bottom: 38px; }
 
-  /* ---- narrativa do utilizador (banner no topo de cada ecrã) ---- */
-  .user-story-banner {
-    background: var(--bg-raised);
-    border-left: 3px solid var(--green);
-    padding: 12px 18px;
-    border-radius: 8px;
-    margin-bottom: 28px;
-    font-size: 13px;
-    color: var(--text-dim);
-    line-height: 1.5;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  .user-story-banner strong { color: var(--text); }
-  .user-story-banner .emoji { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-
   /* ===== ECRÃ 1: Onboarding ===== */
   .form-row { margin-bottom: 26px; max-width: 460px; }
   .form-row label { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 10px; font-weight: 500; }
   .pill-group { display: flex; gap: 10px; flex-wrap: wrap; }
   .pill {
-    font-family: var(--mono); font-size: 13px; padding: 10
+    font-family: var(--mono); font-size: 13px; padding: 10px 16px; border-radius: 20px;
+    border: 1px solid var(--line); background: var(--bg-raised); color: var(--text-dim); cursor: pointer; transition: all .2s;
+  }
+  .pill.selected { border-color: var(--indigo); color: var(--text); background: rgba(124,156,255,0.12); }
+  .slider-track { height: 6px; background: var(--line); border-radius: 6px; position: relative; margin-top: 18px; }
+  .slider-fill { position: absolute; left: 0; top: 0; height: 100%; width: 46%; background: var(--indigo); border-radius: 6px; }
+  .slider-knob { position: absolute; left: 46%; top: 50%; width: 18px; height: 18px; background: var(--text); border-radius: 50%; transform: translate(-50%,-50%); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+  .slider-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-top: 10px; }
+
+  /* ===== ECRÃ 2: Janela de oportunidade (notificação) ===== */
+  .calendar-mock { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 14px; padding: 22px; max-width: 480px; margin-bottom: 30px; }
+  .cal-event { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .cal-event:last-child { border-bottom: none; }
+  .cal-event .t { font-family: var(--mono); color: var(--text-dim); width: 70px; flex-shrink: 0; }
+  .cal-event.busy .name { color: var(--text); }
+  .cal-event.gap { background: rgba(61,220,151,0.07); margin: 0 -22px; padding: 12px 22px; border-bottom: none; }
+  .cal-event.gap .name { color: var(--green); font-weight: 600; }
+
+  .notif-card {
+    background: var(--bg-raised); border: 1px solid var(--indigo); border-radius: 14px; padding: 22px 24px;
+    max-width: 420px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 0 0 4px rgba(124,156,255,0.06);
+    animation: pulseIn .4s ease;
+  }
+  @keyframes pulseIn { from { opacity:0; transform: scale(.97); } to { opacity:1; transform: scale(1); } }
+  .notif-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(124,156,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .notif-body .notif-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .notif-body .notif-text { font-size: 13px; color: var(--text-dim); line-height: 1.5; margin-bottom: 14px; }
+  .notif-actions { display: flex; gap: 10px; }
+  .notif-btn { font-family: var(--mono); font-size: 12px; padding: 8px 14px; border-radius: 7px; border: none; cursor: pointer; }
+  .notif-btn.yes { background: var(--indigo); color: var(--bg-deep); font-weight: 600; }
+  .notif-btn.no { background: transparent; color: var(--text-dim); border: 1px solid var(--line); }
+
+  /* ===== ECRÃ 3: Micro-desafio no IDE ===== */
+  .ide-mock { background: var(--bg-deep); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; max-width: 620px; }
+  .ide-tabs { display: flex; background: var(--bg-raised); border-bottom: 1px solid var(--line); }
+  .ide-tab { font-family: var(--mono); font-size: 12px; padding: 10px 18px; color: var(--text-dim); border-right: 1px solid var(--line); }
+  .ide-tab.active { color: var(--text); background: var(--bg-deep); }
+  .ide-body { padding: 20px 22px; font-family: var(--mono); font-size: 13px; line-height: 1.7; }
+  .ide-line { display: flex; gap: 16px; }
+  .ide-line .ln { color: #3a4156; width: 18px; text-align: right; flex-shrink: 0; user-select: none; }
+  .ide-kw { color: var(--indigo); } .ide-str { color: var(--green); } .ide-cmt { color: var(--text-dim); }
+  .challenge-banner { margin-top: 4px; border-top: 1px dashed var(--line); padding-top: 14px; display: flex; align-items: center; gap: 10px; }
+  .challenge-banner .badge { font-family: var(--mono); font-size: 10px; background: rgba(255,138,92,0.15); color: var(--terracotta); padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: .06em; }
+  .challenge-banner .txt { font-size: 13px; color: var(--text-dim); font-family: var(--body); }
+
+  /* ===== ECRÃ 4: Feedback conversacional ===== */
+  .chat-wrap { max-width: 540px; display: flex; flex-direction: column; gap: 14px; }
+  .msg { display: flex; gap: 12px; max-width: 90%; }
+  .msg .avatar { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .msg.mentor .avatar { background: rgba(124,156,255,0.15); }
+  .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+  .msg.user .avatar { background: var(--line); }
+  .msg .bubble { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; font-size: 14px; line-height: 1.55; }
+  .msg.mentor .bubble { border-color: rgba(124,156,255,0.3); }
+  .msg .bubble code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-deep); padding: 2px 6px; border-radius: 4px; color: var(--green); }
+
+  /* ===== ECRÃ 5: Dashboard de streak ===== */
+  .dash-grid { display: flex; flex-direction: column; gap: 22px; }
+  .dash-row { display: flex; gap: 22px; flex-wrap: wrap; }
+  .dash-card { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 14px; padding: 22px; flex: 1; min-width: 220px; }
+  .dash-card h4 { font-family: var(--mono); font-size: 11px; color: var(--indigo); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 18px; }
+  .mini-timer { width: 110px; height: 110px; margin: 0 auto 14px; position: relative; }
+  .mini-timer svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .mini-timer .trk { fill: none; stroke: var(--line); stroke-width: 9; }
+  .mini-timer .prg { fill: none; stroke: var(--indigo); stroke-width: 9; stroke-linecap: round; stroke-dasharray: 314; stroke-dashoffset: 100; }
+  .mini-timer .pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 600; font-size: 20px; }
+  .mini-caption { text-align: center; color: var(--text-dim); font-size: 13px; }
+  .bars { display: flex; align-items: flex-end; gap: 10px; height: 110px; }
+  .bars .bw { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .bars .b { width: 100%; border-radius: 4px 4px 0 0; background: linear-gradient(to top, var(--indigo), #a3b8ff); }
+  .bars .bl { font-family: var(--mono); font-size: 10px; color: var(--text-dim); }
+  .badges { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  .badge { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 12px; color: var(--text-dim); display: flex; gap: 8px; align-items: flex-start; }
+  .badge .name { color: var(--text); font-weight: 600; display: block; margin-bottom: 2px; }
+  .streak-pill { font-family: var(--mono); font-size: 13px; background: rgba(252,211,77,0.1); color: #fcd34d; padding: 6px 14px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px; }
+
+  /* ---- footer nav ---- */
+  .proto-nav { display: flex; justify-content: space-between; width: 100%; max-width: 980px; margin-top: 22px; }
+  .nav-btn {
+    font-family: var(--mono); font-size: 13px; background: var(--bg-raised); color: var(--text);
+    border: 1px solid var(--line); padding: 11px 20px; border-radius: 9px; cursor: pointer; transition: all .2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-btn:hover:not(:disabled) { border-color: var(--indigo); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .nav-btn.primary { background: var(--indigo); color: var(--bg-deep); font-weight: 600; border: none; }
+  .nav-btn.primary:hover { background: #93AAFF; }
+</style>
+</head>
+<body>
+
+<a href="landing.html" class="back-link">← Voltar à Landing Page</a>
+
+<div class="proto-header">
+  <div class="proto-title">Deep-Flow · <b>Demonstração Funcional do MVP</b></div>
+  <div class="proto-step-label" id="stepLabel">Ecrã 1 de 5</div>
+</div>
+
+<div class="persona-banner">
+  <div class="persona-avatar">🧑‍💻</div>
+  <div class="persona-text" id="personaText">
+    <span class="stage">A narrativa</span>
+    Um <b>Engenheiro de Dados</b> sente-se marginalizado pela rápida adoção de novas bibliotecas de IA — inscrever-se num curso tradicional falha por falta de blocos de 2 horas livres. Segue o percurso para veres como o Deep-Flow resolve isto em janelas de 10 minutos.
+  </div>
+</div>
+
+<div class="stepper" id="stepper"></div>
+
+<div class="device">
+  <div class="device-bar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="path" id="devicePath">deep-flow · onboarding</span>
+  </div>
+
+  <!-- ECRÃ 1 — Onboarding de Objetivo -->
+  <div class="screen active" data-screen="1">
+    <div class="screen-eyebrow">Ecrã 1 · Onboarding de Objetivo</div>
+    <h2 class="screen-title">O que queres dominar?</h2>
+    <p class="screen-sub">Configura a tua competência-alvo e a disponibilidade temporal real que tens durante a semana de trabalho.</p>
+
+    <div class="form-row">
+      <label>Competência-alvo</label>
+      <div class="pill-group">
+        <span class="pill selected">Prompt Engineering</span>
+        <span class="pill">SQL Avançado</span>
+        <span class="pill">Python para Dados</span>
+        <span class="pill">Excel + IA</span>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label>Disponibilidade média entre tarefas</label>
+      <div class="slider-track"><div class="slider-fill"></div><div class="slider-knob"></div></div>
+      <div class="slider-labels"><span>5 min</span><span>10 min</span><span>20 min</span></div>
+    </div>
+
+    <div class="form-row">
+      <label>Onde trabalhas?</label>
+      <div class="pill-group">
+        <span class="pill selected">VS Code</span>
+        <span class="pill">Excel</span>
+        <span class="pill">Jupyter</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECRÃ 2 — Janela de Oportunidade -->
+  <div class="screen" data-screen="2">
+    <div class="screen-eyebrow">Ecrã 2 · Janela de Oportunidade</div>
+    <h2 class="screen-title">Encontrámos 10 minutos livres.</h2>
+    <p class="screen-sub">O Deep-Flow lê o teu calendário e deteta o hiato entre duas reuniões — sem que precises de ir à procura dele.</p>
+
+    <div class="calendar-mock">
+      <div class="cal-event busy"><span class="t">09:30</span><span class="name">Daily standup</span></div>
+      <div class="cal-event gap"><span class="t">09:50</span><span class="name">⏱ Janela livre · 10 min</span></div>
+      <div class="cal-event busy"><span class="t">10:00</span><span class="name">Revisão de sprint</span></div>
+    </div>
+
+    <div class="notif-card">
+      <div class="notif-icon">🧠</div>
+      <div class="notif-body">
+        <div class="notif-title">Tens 10 minutos livres</div>
+        <div class="notif-text">Queres praticar Prompt Engineering antes da próxima reunião?</div>
+        <div class="notif-actions">
+          <button class="notif-btn yes">Sim, vamos a isto</button>
+          <button class="notif-btn no">Agora não</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECRÃ 3 — Micro-desafio Contextual -->
+  <div class="screen" data-screen="3">
+    <div class="screen-eyebrow">Ecrã 3 · Micro-desafio Contextual</div>
+    <h2 class="screen-title">A tarefa aparece onde já estás a trabalhar.</h2>
+    <p class="screen-sub">Sem sair do VS Code. O desafio é injetado diretamente no editor, com contexto do código real em que estavas a trabalhar.</p>
+
+    <div class="ide-mock">
+      <div class="ide-tabs">
+        <div class="ide-tab active">query_refactor.sql</div>
+        <div class="ide-tab">main.py</div>
+      </div>
+      <div class="ide-body">
+        <div class="ide-line"><span class="ln">1</span><span><span class="ide-cmt">-- 🧠 Micro-desafio: refatoriza esta query para usar uma CTE</span></span></div>
+        <div class="ide-line"><span class="ln">2</span><span><span class="ide-kw">SELECT</span> cliente_id, <span class="ide-kw">COUNT</span>(*)</span></div>
+        <div class="ide-line"><span class="ln">3</span><span><span class="ide-kw">FROM</span> (<span class="ide-kw">SELECT</span> * <span class="ide-kw">FROM</span> pedidos <span class="ide-kw">WHERE</span> estado = <span class="ide-str">'ativo'</span>) p</span></div>
+        <div class="ide-line"><span class="ln">4</span><span><span class="ide-kw">GROUP BY</span> cliente_id;</span></div>
+        <div class="ide-line"><span class="ln">5</span><span>&nbsp;</span></div>
+        <div class="challenge-banner">
+          <span class="badge">10 min</span>
+          <span class="txt">Refatorização de Query SQL — substitui a subquery por uma CTE nomeada.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECRÃ 4 — Feedback Conversacional -->
+  <div class="screen" data-screen="4">
+    <div class="screen-eyebrow">Ecrã 4 · Feedback Conversacional</div>
+    <h2 class="screen-title">O mentor corrige no momento, não no fim do curso.</h2>
+    <p class="screen-sub">A IA identifica o erro lógico e sugere a refatoração imediata — aplicável à tarefa real dez minutos depois.</p>
+
+    <div class="chat-wrap">
+      <div class="msg user">
+        <div class="avatar">🧑‍💻</div>
+        <div class="bubble">Reescrevi com <code>WITH</code>, mas a contagem está a dar diferente do original. Porquê?</div>
+      </div>
+      <div class="msg mentor">
+        <div class="avatar">🤖</div>
+        <div class="bubble">Boa tentativa! A tua CTE não está a filtrar <code>estado = 'ativo'</code> antes do <code>GROUP BY</code> — está a contar todos os pedidos. Move o <code>WHERE</code> para dentro da CTE.</div>
+      </div>
+      <div class="msg user">
+        <div class="avatar">🧑‍💻</div>
+        <div class="bubble">Saiu certo agora. 🙌</div>
+      </div>
+      <div class="msg mentor">
+        <div class="avatar">🤖</div>
+        <div class="bubble">Exatamente isso. Já podes aplicar este padrão na query de produção que tens aberta no outro separador.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECRÃ 5 — Dashboard de Streak Cognitivo -->
+  <div class="screen" data-screen="5">
+    <div class="screen-eyebrow">Ecrã 5 · Dashboard de Streak Cognitivo</div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px;">
+      <h2 class="screen-title">O teu progresso, sem abrir um portal.</h2>
+      <span class="streak-pill">🔥 Streak: 7 dias</span>
+    </div>
+    <p class="screen-sub">Visualizas a evolução acumulada e a prontidão para a próxima unidade — tudo dentro do mesmo painel leve.</p>
+
+    <div class="dash-grid">
+      <div class="dash-row">
+        <div class="dash-card" style="flex: 0.7; text-align:center;">
+          <h4>Progresso alvo</h4>
+          <div class="mini-timer">
+            <svg viewBox="0 0 120 120">
+              <circle class="trk" cx="60" cy="60" r="50"></circle>
+              <circle class="prg" cx="60" cy="60" r="50"></circle>
+            </svg>
+            <div class="pct">68%</div>
+          </div>
+          <div class="mini-caption">Prompt Engineering</div>
+        </div>
+        <div class="dash-card" style="flex: 1.4;">
+          <h4>Minutos investidos no fluxo (semana)</h4>
+          <div class="bars">
+            <div class="bw"><div class="b" style="height:34px;"></div><div class="bl">SEG</div></div>
+            <div class="bw"><div class="b" style="height:50px;"></div><div class="bl">TER</div></div>
+            <div class="bw"><div class="b" style="height:68px;"></div><div class="bl">QUA</div></div>
+            <div class="bw"><div class="b" style="height:26px;"></div><div class="bl">QUI</div></div>
+            <div class="bw"><div class="b" style="height:60px;"></div><div class="bl">SEX</div></div>
+            <div class="bw"><div class="b" style="height:42px;"></div><div class="bl">SÁB</div></div>
+            <div class="bw"><div class="b" style="height:17px; background: #2a2f42;"></div><div class="bl">DOM</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <h4>Conquistas desbloqueadas</h4>
+        <div class="badges">
+          <div class="badge">✅ <span><span class="name">Foco Total</span>7 dias seguidos</span></div>
+          <div class="badge">✅ <span><span class="name">Mestre da Integração</span>15 desafios no VS Code</span></div>
+          <div class="badge">✅ <span><span class="name">Resiliência</span>100 min em micro-pausas</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="proto-nav">
+  <button class="nav-btn" id="prevBtn">← Anterior</button>
+  <button class="nav-btn primary" id="nextBtn">Seguinte →</button>
+</div>
+
+<script>
+  const total = 5;
+  let current = 1;
+  const screenPaths = {
+    1: 'deep-flow · onboarding',
+    2: 'deep-flow · janela-de-oportunidade',
+    3: 'deep-flow · micro-desafio.sql',
+    4: 'deep-flow · feedback-conversacional',
+    5: 'deep-flow · dashboard-streak'
+  };
+  const personaNarratives = {
+    1: '<span class="stage">A narrativa</span>Um <b>Engenheiro de Dados</b> sente-se marginalizado pela rápida adoção de novas bibliotecas de IA — inscrever-se num curso tradicional falha por falta de blocos de 2 horas livres. Aqui define o que quer dominar.',
+    2: '<span class="stage">A narrativa</span>Em vez de procurar tempo, é o <b>Deep-Flow que encontra a janela</b> — um hiato de 10 minutos entre o standup e a revisão de sprint que já existia na sua agenda.',
+    3: '<span class="stage">A narrativa</span>O desafio chega <b>dentro do VS Code</b>, com contexto do código real — não é preciso abrir nenhum portal de cursos para começar a praticar.',
+    4: '<span class="stage">A narrativa</span>O mentor de IA corrige o erro <b>no momento</b>, como um colega sénior, permitindo aplicar o padrão na tarefa real minutos depois.',
+    5: '<span class="stage">A narrativa</span>A requalificação deixou de ser um "evento externo": o progresso acumula-se sozinho, e o profissional já está pronto para a próxima unidade.'
+  };
+
+  const stepper = document.getElementById('stepper');
+  for (let i = 1; i <= total; i++) {
+    const b = document.createElement('button');
+    b.dataset.step = i;
+    b.addEventListener('click', () => goTo(i));
+    stepper.appendChild(b);
+  }
+
+  function render() {
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.toggle('active', Number(s.dataset.screen) === current);
+    });
+    document.querySelectorAll('.stepper button').forEach(b => {
+      const i = Number(b.dataset.step);
+      b.classList.toggle('done', i < current);
+      b.classList.toggle('active', i === current);
+    });
+    document.getElementById('stepLabel').textContent = `Ecrã ${current} de ${total}`;
+    document.getElementById('devicePath').textContent = screenPaths[current];
+    document.getElementById('personaText').innerHTML = personaNarratives[current];
+    document.getElementById('prevBtn').disabled = current === 1;
+    document.getElementById('nextBtn').textContent = current === total ? 'Reiniciar ↺' : 'Seguinte →';
+  }
+
+  function goTo(n) {
+    current = Math.min(Math.max(1, n), total);
+    render();
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (current === total) { goTo(1); } else { goTo(current + 1); }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') goTo(current + 1);
+    if (e.key === 'ArrowLeft') goTo(current - 1);
+  });
+
+  render();
+</script>
+
+</body>
+</html>
