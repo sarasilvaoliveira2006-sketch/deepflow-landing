@@ -3,17 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deep-Flow — Requalifica-te no fluxo do teu trabalho</title>
+<title>Deep-Flow — Protótipo MVP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0B0E14;
     --bg-raised: #11151F;
+    --bg-deep: #070911;
     --text: #F5F3EE;
     --text-dim: #8B92A6;
     --indigo: #7C9CFF;
+    --indigo-dim: #2d3566;
     --green: #3DDC97;
     --terracotta: #FF8A5C;
     --line: #1F2433;
@@ -21,389 +23,424 @@
     --body: 'Inter', sans-serif;
     --mono: 'JetBrains Mono', monospace;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
   body {
-    background: var(--bg);
+    background: var(--bg-deep);
     color: var(--text);
     font-family: var(--body);
-    line-height: 1.5;
-    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 16px 60px;
   }
-
   @media (prefers-reduced-motion: reduce) {
-    * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
+  button:focus-visible, .stepper button:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
 
-  a:focus-visible, button:focus-visible { outline: 2px solid var(--indigo); outline-offset: 3px; }
+  /* ---- top label ---- */
+  .proto-header { width: 100%; max-width: 980px; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; padding: 0 4px; }
+  .proto-title { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+  .proto-title b { color: var(--green); }
+  .proto-step-label { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+  .back-link { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 14px; transition: color .2s; }
+  .back-link:hover { color: var(--text); }
 
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-
-  /* ---------- NAV ---------- */
-  nav {
-    position: sticky; top: 0; z-index: 50;
-    background: rgba(11,14,20,0.85);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--line);
+  /* ---- persona / narrative banner ---- */
+  .persona-banner {
+    width: 100%; max-width: 980px; display: flex; gap: 16px; align-items: flex-start;
+    background: var(--bg-raised); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 20px; margin-bottom: 22px;
   }
-  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; }
-  .logo { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px; }
-  .logo-mark { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
-  .nav-links { display: flex; gap: 36px; font-size: 14px; color: var(--text-dim); }
-  .nav-links a { color: inherit; text-decoration: none; transition: color .2s; }
-  .nav-links a:hover { color: var(--text); }
-  .nav-cta {
-    background: var(--indigo); color: #0B0E14; font-weight: 600; font-size: 14px;
-    padding: 10px 20px; border-radius: 8px; text-decoration: none; transition: transform .15s, background .2s;
+  .persona-avatar { width: 36px; height: 36px; border-radius: 9px; background: rgba(124,156,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+  .persona-text { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+  .persona-text b { color: var(--text); font-weight: 600; }
+  .persona-text .stage { font-family: var(--mono); font-size: 11px; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
+
+  /* ---- stepper ---- */
+  .stepper { display: flex; gap: 8px; width: 100%; max-width: 980px; margin-bottom: 28px; }
+  .stepper button {
+    flex: 1; height: 4px; border-radius: 4px; background: var(--line); border: none; cursor: pointer; padding: 0;
+    position: relative; transition: background .25s;
   }
-  .nav-cta:hover { background: #93AAFF; transform: translateY(-1px); }
-  @media (max-width: 720px) { .nav-links { display: none; } }
+  .stepper button.active, .stepper button.done { background: var(--indigo); }
+  .stepper button.active { background: var(--green); }
 
-  /* ---------- HERO ---------- */
-  .hero { padding: 96px 0 110px; position: relative; }
-  .hero .wrap { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 64px; align-items: center; }
-  @media (max-width: 880px) { .hero .wrap { grid-template-columns: 1fr; } .hero { padding: 56px 0 72px; } }
-
-  .eyebrow {
-    font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--green); display: flex; align-items: center; gap: 10px; margin-bottom: 22px;
+  /* ---- device frame ---- */
+  .device {
+    width: 100%; max-width: 980px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+    overflow: hidden;
+    min-height: 560px;
+    position: relative;
   }
-  .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--green); }
+  .device-bar { display: flex; align-items: center; gap: 8px; padding: 16px 22px; border-bottom: 1px solid var(--line); background: var(--bg-raised); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; } .dot.y { background: #febc2e; } .dot.g { background: #28c840; }
+  .device-bar .path { margin-left: 16px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
 
-  h1.headline {
-    font-family: var(--display); font-weight: 600; font-size: clamp(36px, 5vw, 58px);
-    line-height: 1.08; letter-spacing: -0.01em; color: var(--text); margin-bottom: 26px;
+  .screen { padding: 52px 56px; min-height: 480px; display: none; animation: fadeIn .35s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 720px) { .screen { padding: 34px 22px; } }
+
+  .screen-eyebrow { font-family: var(--mono); font-size: 11px; color: var(--indigo); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+  .screen-title { font-family: var(--display); font-weight: 600; font-size: clamp(24px, 3vw, 32px); margin-bottom: 10px; }
+  .screen-sub { color: var(--text-dim); font-size: 15px; max-width: 520px; margin-bottom: 38px; }
+
+  /* ===== ECRÃ 1: Onboarding ===== */
+  .form-row { margin-bottom: 26px; max-width: 460px; }
+  .form-row label { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 10px; font-weight: 500; }
+  .pill-group { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pill {
+    font-family: var(--mono); font-size: 13px; padding: 10px 16px; border-radius: 20px;
+    border: 1px solid var(--line); background: var(--bg-raised); color: var(--text-dim); cursor: pointer; transition: all .2s;
   }
-  h1.headline em { font-style: italic; color: var(--indigo); }
+  .pill.selected { border-color: var(--indigo); color: var(--text); background: rgba(124,156,255,0.12); }
+  .slider-track { height: 6px; background: var(--line); border-radius: 6px; position: relative; margin-top: 18px; }
+  .slider-fill { position: absolute; left: 0; top: 0; height: 100%; width: 46%; background: var(--indigo); border-radius: 6px; }
+  .slider-knob { position: absolute; left: 46%; top: 50%; width: 18px; height: 18px; background: var(--text); border-radius: 50%; transform: translate(-50%,-50%); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+  .slider-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-top: 10px; }
 
-  .sub { font-size: 18px; color: var(--text-dim); max-width: 480px; margin-bottom: 36px; }
+  /* ===== ECRÃ 2: Janela de oportunidade (notificação) ===== */
+  .calendar-mock { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 14px; padding: 22px; max-width: 480px; margin-bottom: 30px; }
+  .cal-event { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .cal-event:last-child { border-bottom: none; }
+  .cal-event .t { font-family: var(--mono); color: var(--text-dim); width: 70px; flex-shrink: 0; }
+  .cal-event.busy .name { color: var(--text); }
+  .cal-event.gap { background: rgba(61,220,151,0.07); margin: 0 -22px; padding: 12px 22px; border-bottom: none; }
+  .cal-event.gap .name { color: var(--green); font-weight: 600; }
 
-  .hero-ctas { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-  .btn-primary {
-    background: var(--indigo); color: #0B0E14; font-weight: 600; font-size: 15px;
-    padding: 15px 26px; border-radius: 9px; text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
-    transition: transform .15s, box-shadow .2s; border: none; cursor: pointer;
+  .notif-card {
+    background: var(--bg-raised); border: 1px solid var(--indigo); border-radius: 14px; padding: 22px 24px;
+    max-width: 420px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 0 0 4px rgba(124,156,255,0.06);
+    animation: pulseIn .4s ease;
   }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,156,255,0.28); }
-  .btn-ghost { color: var(--text-dim); font-size: 14px; text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; transition: color .2s, border-color .2s; }
-  .btn-ghost:hover { color: var(--text); border-color: var(--text-dim); }
+  @keyframes pulseIn { from { opacity:0; transform: scale(.97); } to { opacity:1; transform: scale(1); } }
+  .notif-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(124,156,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .notif-body .notif-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .notif-body .notif-text { font-size: 13px; color: var(--text-dim); line-height: 1.5; margin-bottom: 14px; }
+  .notif-actions { display: flex; gap: 10px; }
+  .notif-btn { font-family: var(--mono); font-size: 12px; padding: 8px 14px; border-radius: 7px; border: none; cursor: pointer; }
+  .notif-btn.yes { background: var(--indigo); color: var(--bg-deep); font-weight: 600; }
+  .notif-btn.no { background: transparent; color: var(--text-dim); border: 1px solid var(--line); }
 
-  /* ---- timer signature ---- */
-  .timer-stage { display: flex; flex-direction: column; align-items: center; gap: 18px; }
-  .timer-wrap { position: relative; width: 260px; height: 260px; }
-  .timer-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-  .timer-track { fill: none; stroke: var(--line); stroke-width: 10; }
-  .timer-progress { fill: none; stroke: var(--indigo); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 691; stroke-dashoffset: 691; animation: fillTimer 9s ease-in-out infinite; }
-  @keyframes fillTimer { 0% { stroke-dashoffset: 691; stroke: var(--indigo); } 85% { stroke-dashoffset: 0; stroke: var(--green); } 100% { stroke-dashoffset: 0; stroke: var(--green); } }
-  .timer-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .timer-num { font-family: var(--mono); font-size: 46px; font-weight: 600; color: var(--text); }
-  .timer-label { font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
-  .timer-caption { font-family: var(--mono); font-size: 13px; color: var(--text-dim); text-align: center; max-width: 220px; }
-  .timer-caption b { color: var(--text); font-weight: 500; }
+  /* ===== ECRÃ 3: Micro-desafio no IDE ===== */
+  .ide-mock { background: var(--bg-deep); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; max-width: 620px; }
+  .ide-tabs { display: flex; background: var(--bg-raised); border-bottom: 1px solid var(--line); }
+  .ide-tab { font-family: var(--mono); font-size: 12px; padding: 10px 18px; color: var(--text-dim); border-right: 1px solid var(--line); }
+  .ide-tab.active { color: var(--text); background: var(--bg-deep); }
+  .ide-body { padding: 20px 22px; font-family: var(--mono); font-size: 13px; line-height: 1.7; }
+  .ide-line { display: flex; gap: 16px; }
+  .ide-line .ln { color: #3a4156; width: 18px; text-align: right; flex-shrink: 0; user-select: none; }
+  .ide-kw { color: var(--indigo); } .ide-str { color: var(--green); } .ide-cmt { color: var(--text-dim); }
+  .challenge-banner { margin-top: 4px; border-top: 1px dashed var(--line); padding-top: 14px; display: flex; align-items: center; gap: 10px; }
+  .challenge-banner .badge { font-family: var(--mono); font-size: 10px; background: rgba(255,138,92,0.15); color: var(--terracotta); padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: .06em; }
+  .challenge-banner .txt { font-size: 13px; color: var(--text-dim); font-family: var(--body); }
 
-  /* ---------- FRICTION (before/after) ---------- */
-  .section { padding: 90px 0; }
-  .section-head { max-width: 640px; margin-bottom: 56px; }
-  .section-eyebrow { font-family: var(--mono); font-size: 12px; color: var(--terracotta); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
-  h2.section-title { font-family: var(--display); font-size: clamp(28px, 3.4vw, 38px); font-weight: 600; line-height: 1.15; color: var(--text); }
-  .section-body { color: var(--text-dim); font-size: 16px; margin-top: 16px; max-width: 560px; }
+  /* ===== ECRÃ 4: Feedback conversacional ===== */
+  .chat-wrap { max-width: 540px; display: flex; flex-direction: column; gap: 14px; }
+  .msg { display: flex; gap: 12px; max-width: 90%; }
+  .msg .avatar { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .msg.mentor .avatar { background: rgba(124,156,255,0.15); }
+  .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+  .msg.user .avatar { background: var(--line); }
+  .msg .bubble { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; font-size: 14px; line-height: 1.55; }
+  .msg.mentor .bubble { border-color: rgba(124,156,255,0.3); }
+  .msg .bubble code { font-family: var(--mono); font-size: 12.5px; background: var(--bg-deep); padding: 2px 6px; border-radius: 4px; color: var(--green); }
 
-  .friction-compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
-  .friction-col { padding: 36px; }
-  .friction-col.before { background: var(--bg-raised); }
-  .friction-col.after { background: linear-gradient(160deg, rgba(124,156,255,0.08), transparent); }
-  .friction-divider { width: 1px; background: var(--line); }
-  .friction-tag { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 18px; display: inline-block; }
-  .friction-col.before .friction-tag { color: var(--text-dim); }
-  .friction-col.after .friction-tag { color: var(--green); }
-  .friction-col h3 { font-family: var(--display); font-size: 22px; font-weight: 500; margin-bottom: 14px; }
-  .friction-col p { color: var(--text-dim); font-size: 15px; line-height: 1.6; }
-  @media (max-width: 720px) { .friction-compare { grid-template-columns: 1fr; } .friction-divider { width: 100%; height: 1px; } }
+  /* ===== ECRÃ 5: Dashboard de streak ===== */
+  .dash-grid { display: flex; flex-direction: column; gap: 22px; }
+  .dash-row { display: flex; gap: 22px; flex-wrap: wrap; }
+  .dash-card { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 14px; padding: 22px; flex: 1; min-width: 220px; }
+  .dash-card h4 { font-family: var(--mono); font-size: 11px; color: var(--indigo); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 18px; }
+  .mini-timer { width: 110px; height: 110px; margin: 0 auto 14px; position: relative; }
+  .mini-timer svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .mini-timer .trk { fill: none; stroke: var(--line); stroke-width: 9; }
+  .mini-timer .prg { fill: none; stroke: var(--indigo); stroke-width: 9; stroke-linecap: round; stroke-dasharray: 314; stroke-dashoffset: 100; }
+  .mini-timer .pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 600; font-size: 20px; }
+  .mini-caption { text-align: center; color: var(--text-dim); font-size: 13px; }
+  .bars { display: flex; align-items: flex-end; gap: 10px; height: 110px; }
+  .bars .bw { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .bars .b { width: 100%; border-radius: 4px 4px 0 0; background: linear-gradient(to top, var(--indigo), #a3b8ff); }
+  .bars .bl { font-family: var(--mono); font-size: 10px; color: var(--text-dim); }
+  .badges { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  .badge { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 12px; color: var(--text-dim); display: flex; gap: 8px; align-items: flex-start; }
+  .badge .name { color: var(--text); font-weight: 600; display: block; margin-bottom: 2px; }
+  .streak-pill { font-family: var(--mono); font-size: 13px; background: rgba(252,211,77,0.1); color: #fcd34d; padding: 6px 14px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px; }
 
-  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); margin-top: 48px; border-radius: 14px; overflow: hidden; }
-  .stat-item { background: var(--bg-raised); padding: 28px 24px; }
-  .stat-num { font-family: var(--mono); font-size: 30px; color: var(--indigo); font-weight: 600; }
-  .stat-cap { font-size: 13px; color: var(--text-dim); margin-top: 8px; line-height: 1.4; }
-  @media (max-width: 720px) { .stat-row { grid-template-columns: 1fr; } }
-
-  /* ---------- BENEFITS ---------- */
-  .benefits-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-  @media (max-width: 800px) { .benefits-cols { grid-template-columns: 1fr; } }
-  .benefit-group { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 16px; padding: 32px; }
-  .benefit-group-tag { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px; display: inline-block; }
-  .benefit-group.user .benefit-group-tag { color: var(--indigo); }
-  .benefit-group.biz .benefit-group-tag { color: var(--green); }
-  .benefit-item { display: flex; gap: 14px; padding: 16px 0; border-top: 1px solid var(--line); }
-  .benefit-item:first-of-type { border-top: none; }
-  .benefit-icon { font-size: 18px; line-height: 1; flex-shrink: 0; padding-top: 2px; }
-  .benefit-item h4 { font-family: var(--display); font-size: 16px; font-weight: 500; margin-bottom: 4px; }
-  .benefit-item p { font-size: 14px; color: var(--text-dim); line-height: 1.5; }
-
-  /* ---------- HOW IT WORKS ---------- */
-  .flow-list { display: flex; flex-direction: column; }
-  .flow-row { display: grid; grid-template-columns: 64px 1fr; gap: 28px; padding: 28px 0; border-top: 1px solid var(--line); }
-  .flow-row:first-child { border-top: none; }
-  .flow-idx { font-family: var(--mono); font-size: 13px; color: var(--text-dim); padding-top: 4px; }
-  .flow-title { font-family: var(--display); font-size: 20px; font-weight: 500; margin-bottom: 6px; }
-  .flow-desc { color: var(--text-dim); font-size: 15px; max-width: 560px; }
-
-  /* ---------- COMPETITORS ---------- */
-  table.compare { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.compare th { text-align: left; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); padding: 0 18px 16px; border-bottom: 1px solid var(--line); }
-  table.compare td { padding: 20px 18px; border-bottom: 1px solid var(--line); color: var(--text-dim); vertical-align: top; }
-  table.compare td.name { color: var(--text); font-weight: 600; font-family: var(--display); font-size: 16px; }
-  table.compare tr.deepflow td { color: var(--text); }
-  table.compare tr.deepflow td.name { color: var(--green); }
-  .compare-wrap { overflow-x: auto; }
-  @media (max-width: 720px) { table.compare { min-width: 640px; } }
-
-  /* ---------- CTA FINAL ---------- */
-  .cta-final { padding: 110px 0 120px; text-align: center; position: relative; }
-  .cta-final h2 { font-family: var(--display); font-size: clamp(30px, 4.6vw, 48px); font-weight: 600; max-width: 700px; margin: 0 auto 18px; line-height: 1.12; }
-  .cta-final .sub { margin: 0 auto 40px; }
-  .cta-final .hero-ctas { justify-content: center; }
-
-  footer { border-top: 1px solid var(--line); padding: 36px 0; }
-  footer .wrap { display: flex; justify-content: space-between; align-items: center; color: var(--text-dim); font-size: 13px; }
-  footer a { color: var(--text-dim); text-decoration: none; }
+  /* ---- footer nav ---- */
+  .proto-nav { display: flex; justify-content: space-between; width: 100%; max-width: 980px; margin-top: 22px; }
+  .nav-btn {
+    font-family: var(--mono); font-size: 13px; background: var(--bg-raised); color: var(--text);
+    border: 1px solid var(--line); padding: 11px 20px; border-radius: 9px; cursor: pointer; transition: all .2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-btn:hover:not(:disabled) { border-color: var(--indigo); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .nav-btn.primary { background: var(--indigo); color: var(--bg-deep); font-weight: 600; border: none; }
+  .nav-btn.primary:hover { background: #93AAFF; }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="wrap">
-    <div class="logo"><span class="logo-mark"></span>Deep-Flow</div>
-    <div class="nav-links">
-      <a href="#beneficios">Benefícios</a>
-      <a href="#problema">Problema</a>
-      <a href="#como-funciona">Como funciona</a>
-      <a href="#comparacao">Comparação</a>
-    </div>
-    <a href="mvp.html" class="nav-cta">Ver Demonstração MVP</a>
+<a href="landing.html" class="back-link">← Voltar à Landing Page</a>
+
+<div class="proto-header">
+  <div class="proto-title">Deep-Flow · <b>Demonstração Funcional do MVP</b></div>
+  <div class="proto-step-label" id="stepLabel">Ecrã 1 de 5</div>
+</div>
+
+<div class="persona-banner">
+  <div class="persona-avatar">🧑‍💻</div>
+  <div class="persona-text" id="personaText">
+    <span class="stage">A narrativa</span>
+    Um <b>Engenheiro de Dados</b> sente-se marginalizado pela rápida adoção de novas bibliotecas de IA — inscrever-se num curso tradicional falha por falta de blocos de 2 horas livres. Segue o percurso para veres como o Deep-Flow resolve isto em janelas de 10 minutos.
   </div>
-</nav>
+</div>
 
-<section class="hero">
-  <div class="wrap">
-    <div>
-      <div class="eyebrow">Mentor de micro-aprendizagem assistido por IA</div>
-      <h1 class="headline">Requalifica-te <em>no fluxo</em> do teu trabalho, não fora dele.</h1>
-      <p class="sub">Transformamos as janelas livres no teu calendário em progresso real de carreira. Sem portais de cursos, sem blocos de duas horas — só os 10 minutos que já tens entre reuniões.</p>
-      <div class="hero-ctas">
-        <a href="mvp.html" class="btn-primary">▶ Experimentar o Protótipo MVP</a>
-        <a href="#beneficios" class="btn-ghost">Ver benefícios</a>
+<div class="stepper" id="stepper"></div>
+
+<div class="device">
+  <div class="device-bar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="path" id="devicePath">deep-flow · onboarding</span>
+  </div>
+
+  <!-- ECRÃ 1 — Onboarding de Objetivo -->
+  <div class="screen active" data-screen="1">
+    <div class="screen-eyebrow">Ecrã 1 · Onboarding de Objetivo</div>
+    <h2 class="screen-title">O que queres dominar?</h2>
+    <p class="screen-sub">Configura a tua competência-alvo e a disponibilidade temporal real que tens durante a semana de trabalho.</p>
+
+    <div class="form-row">
+      <label>Competência-alvo</label>
+      <div class="pill-group">
+        <span class="pill selected">Prompt Engineering</span>
+        <span class="pill">SQL Avançado</span>
+        <span class="pill">Python para Dados</span>
+        <span class="pill">Excel + IA</span>
       </div>
     </div>
-    <div class="timer-stage">
-      <div class="timer-wrap">
-        <svg viewBox="0 0 240 240">
-          <circle class="timer-track" cx="120" cy="120" r="110"></circle>
-          <circle class="timer-progress" cx="120" cy="120" r="110"></circle>
-        </svg>
-        <div class="timer-center">
-          <div class="timer-num">10:00</div>
-          <div class="timer-label">min disponíveis</div>
-        </div>
+
+    <div class="form-row">
+      <label>Disponibilidade média entre tarefas</label>
+      <div class="slider-track"><div class="slider-fill"></div><div class="slider-knob"></div></div>
+      <div class="slider-labels"><span>5 min</span><span>10 min</span><span>20 min</span></div>
+    </div>
+
+    <div class="form-row">
+      <label>Onde trabalhas?</label>
+      <div class="pill-group">
+        <span class="pill selected">VS Code</span>
+        <span class="pill">Excel</span>
+        <span class="pill">Jupyter</span>
       </div>
-      <div class="timer-caption">Entre esta reunião e a próxima, o Deep-Flow encontra <b>uma competência</b> que cabe exatamente aqui.</div>
     </div>
   </div>
-</section>
 
-<section class="section" id="beneficios">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="section-eyebrow">Proposta de valor</div>
-      <h2 class="section-title">Benefícios principais.</h2>
-      <p class="section-body">Para o profissional, a aprendizagem deixa de competir pelo tempo. Para a organização, a requalificação deixa de competir pela produtividade.</p>
+  <!-- ECRÃ 2 — Janela de Oportunidade -->
+  <div class="screen" data-screen="2">
+    <div class="screen-eyebrow">Ecrã 2 · Janela de Oportunidade</div>
+    <h2 class="screen-title">Encontrámos 10 minutos livres.</h2>
+    <p class="screen-sub">O Deep-Flow lê o teu calendário e deteta o hiato entre duas reuniões — sem que precises de ir à procura dele.</p>
+
+    <div class="calendar-mock">
+      <div class="cal-event busy"><span class="t">09:30</span><span class="name">Daily standup</span></div>
+      <div class="cal-event gap"><span class="t">09:50</span><span class="name">⏱ Janela livre · 10 min</span></div>
+      <div class="cal-event busy"><span class="t">10:00</span><span class="name">Revisão de sprint</span></div>
     </div>
 
-    <div class="benefits-cols">
-      <div class="benefit-group user">
-        <span class="benefit-group-tag">Para o profissional</span>
-        <div class="benefit-item">
-          <span class="benefit-icon">🧩</span>
-          <div><h4>Sem sobrecarga cognitiva</h4><p>O esforço é distribuído em micro-doses de 5 a 10 minutos, eliminando a frustração de percursos genéricos e extensos.</p></div>
-        </div>
-        <div class="benefit-item">
-          <span class="benefit-icon">🎯</span>
-          <div><h4>Personalização adaptativa</h4><p>O nível de dificuldade ajusta-se em tempo real à performance e ao perfil cognitivo de cada utilizador.</p></div>
-        </div>
-        <div class="benefit-item">
-          <span class="benefit-icon">📈</span>
-          <div><h4>Evolução sem interrupção</h4><p>Cada hiato produtivo converte-se em capital intelectual — progressão de carreira sem sair do fluxo de trabalho.</p></div>
-        </div>
-      </div>
-
-      <div class="benefit-group biz">
-        <span class="benefit-group-tag">Para a organização</span>
-        <div class="benefit-item">
-          <span class="benefit-icon">📊</span>
-          <div><h4>ROI de formação exponencial</h4><p>Maior taxa de conclusão e transferência imediata de competências para a produção ativa.</p></div>
-        </div>
-        <div class="benefit-item">
-          <span class="benefit-icon">🤝</span>
-          <div><h4>Retenção de talento</h4><p>Mitiga o burnout associado à atualização constante, respeitando a ecologia temporal do colaborador.</p></div>
-        </div>
-        <div class="benefit-item">
-          <span class="benefit-icon">🔗</span>
-          <div><h4>Fecho dinâmico de skill gaps</h4><p>Alinhamento contínuo entre a visão tecnológica da empresa e as competências práticas da equipa.</p></div>
+    <div class="notif-card">
+      <div class="notif-icon">🧠</div>
+      <div class="notif-body">
+        <div class="notif-title">Tens 10 minutos livres</div>
+        <div class="notif-text">Queres praticar Prompt Engineering antes da próxima reunião?</div>
+        <div class="notif-actions">
+          <button class="notif-btn yes">Sim, vamos a isto</button>
+          <button class="notif-btn no">Agora não</button>
         </div>
       </div>
     </div>
   </div>
-</section>
 
-<section class="section" id="problema">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="section-eyebrow">O problema · Fricção Temporal</div>
-      <h2 class="section-title">A formação tradicional exige tempo que o profissional de dados já não tem.</h2>
-      <p class="section-body">Portugal enfrenta um desfasamento estrutural entre o ritmo de produção e o ritmo de requalificação — agravado por assimetrias de literacia digital e por um ensino superior que ainda não definiu regras claras para a IA.</p>
-    </div>
+  <!-- ECRÃ 3 — Micro-desafio Contextual -->
+  <div class="screen" data-screen="3">
+    <div class="screen-eyebrow">Ecrã 3 · Micro-desafio Contextual</div>
+    <h2 class="screen-title">A tarefa aparece onde já estás a trabalhar.</h2>
+    <p class="screen-sub">Sem sair do VS Code. O desafio é injetado diretamente no editor, com contexto do código real em que estavas a trabalhar.</p>
 
-    <div class="friction-compare">
-      <div class="friction-col before">
-        <span class="friction-tag">Modelo Rígido</span>
-        <h3>Curso tradicional</h3>
-        <p>Inscrição num curso externo, blocos de 1 a 2 horas, consumo passivo de vídeo isolado da tarefa real. O abandono acontece porque essa janela de tempo concentrado simplesmente não existe na agenda do profissional.</p>
+    <div class="ide-mock">
+      <div class="ide-tabs">
+        <div class="ide-tab active">query_refactor.sql</div>
+        <div class="ide-tab">main.py</div>
       </div>
-      <div class="friction-divider"></div>
-      <div class="friction-col after">
-        <span class="friction-tag">Deep-Flow</span>
-        <h3>Micro-aprendizagem just-in-time</h3>
-        <p>O sistema monitoriza janelas de oportunidade no calendário e injeta um desafio prático de 5 a 10 minutos diretamente na ferramenta de trabalho — VS Code, Excel — exatamente quando há espaço para o absorver.</p>
-      </div>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-item">
-        <div class="stat-num">17</div>
-        <div class="stat-cap">instituições de ensino superior em Portugal com diretrizes claras para uso de IA (Público, 2026)</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">5–10</div>
-        <div class="stat-cap">minutos: a unidade atómica de competência que o Deep-Flow injeta no fluxo de trabalho</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">0</div>
-        <div class="stat-cap">portais externos abertos — a aprendizagem ocorre dentro da própria ferramenta técnica</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="como-funciona">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="section-eyebrow">Como funciona</div>
-      <h2 class="section-title">Do atraso tecnológico à maestria no fluxo.</h2>
-      <p class="section-body">Um Engenheiro de Dados sente-se marginalizado pela rápida adoção de novas bibliotecas de IA — e não encontra as duas horas livres que um curso tradicional exige. Com o Deep-Flow, a requalificação deixa de ser um evento externo.</p>
-    </div>
-
-    <div class="flow-list">
-      <div class="flow-row">
-        <div class="flow-idx">01</div>
-        <div>
-          <div class="flow-title">Onboarding de objetivo</div>
-          <div class="flow-desc">Configuras a competência-alvo — por exemplo, Prompt Engineering — e a tua disponibilidade temporal real ao longo da semana.</div>
-        </div>
-      </div>
-      <div class="flow-row">
-        <div class="flow-idx">02</div>
-        <div>
-          <div class="flow-title">Janela de oportunidade</div>
-          <div class="flow-desc">O sistema deteta um hiato livre no calendário e notifica: "Tens 10 minutos livres; queres praticar X?"</div>
-        </div>
-      </div>
-      <div class="flow-row">
-        <div class="flow-idx">03</div>
-        <div>
-          <div class="flow-title">Micro-desafio contextual</div>
-          <div class="flow-desc">A tarefa prática é injetada diretamente no plugin da tua ferramenta de trabalho — sem sair do VS Code ou do Excel.</div>
-        </div>
-      </div>
-      <div class="flow-row">
-        <div class="flow-idx">04</div>
-        <div>
-          <div class="flow-title">Feedback conversacional</div>
-          <div class="flow-desc">O mentor de IA identifica erros lógicos em tempo real e sugere a refatoração imediata, como um colega sénior ao lado.</div>
-        </div>
-      </div>
-      <div class="flow-row">
-        <div class="flow-idx">05</div>
-        <div>
-          <div class="flow-title">Streak cognitivo</div>
-          <div class="flow-desc">O progresso acumula-se num dashboard de continuidade — visualizas o teu avanço e a prontidão para a próxima unidade.</div>
+      <div class="ide-body">
+        <div class="ide-line"><span class="ln">1</span><span><span class="ide-cmt">-- 🧠 Micro-desafio: refatoriza esta query para usar uma CTE</span></span></div>
+        <div class="ide-line"><span class="ln">2</span><span><span class="ide-kw">SELECT</span> cliente_id, <span class="ide-kw">COUNT</span>(*)</span></div>
+        <div class="ide-line"><span class="ln">3</span><span><span class="ide-kw">FROM</span> (<span class="ide-kw">SELECT</span> * <span class="ide-kw">FROM</span> pedidos <span class="ide-kw">WHERE</span> estado = <span class="ide-str">'ativo'</span>) p</span></div>
+        <div class="ide-line"><span class="ln">4</span><span><span class="ide-kw">GROUP BY</span> cliente_id;</span></div>
+        <div class="ide-line"><span class="ln">5</span><span>&nbsp;</span></div>
+        <div class="challenge-banner">
+          <span class="badge">10 min</span>
+          <span class="txt">Refatorização de Query SQL — substitui a subquery por uma CTE nomeada.</span>
         </div>
       </div>
     </div>
   </div>
-</section>
 
-<section class="section" id="comparacao">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="section-eyebrow">Análise competitiva</div>
-      <h2 class="section-title">De "plataforma de cursos" a assistente de performance.</h2>
-      <p class="section-body">Os concorrentes diretos resolvem parte do problema — mas nenhum integra a aprendizagem no próprio fluxo de trabalho técnico.</p>
-    </div>
+  <!-- ECRÃ 4 — Feedback Conversacional -->
+  <div class="screen" data-screen="4">
+    <div class="screen-eyebrow">Ecrã 4 · Feedback Conversacional</div>
+    <h2 class="screen-title">O mentor corrige no momento, não no fim do curso.</h2>
+    <p class="screen-sub">A IA identifica o erro lógico e sugere a refatoração imediata — aplicável à tarefa real dez minutos depois.</p>
 
-    <div class="compare-wrap">
-      <table class="compare">
-        <thead>
-          <tr>
-            <th>Solução</th>
-            <th>Ponto forte</th>
-            <th>Lacuna</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="name">Coursera AI Coach</td>
-            <td>Prestígio académico; curadoria de vídeo com IA</td>
-            <td>Desconexão contextual — exige isolar-se da tarefa produtiva</td>
-          </tr>
-          <tr>
-            <td class="name">Sana Labs</td>
-            <td>Interface high-end; gestão de conhecimento interno</td>
-            <td>Foco em recuperação (search), fraco em aquisição externa de competências</td>
-          </tr>
-          <tr>
-            <td class="name">LinkedIn Learning</td>
-            <td>Rede profissional integrada; biblioteca vasta</td>
-            <td>Consumo passivo — sugestões por keywords, ignoram lacunas práticas reais</td>
-          </tr>
-          <tr class="deepflow">
-            <td class="name">Deep-Flow</td>
-            <td>Invisible Learning — integração orgânica no IDE, com Dynamic Pacing e gamificação de baixa fricção</td>
-            <td>Assistência técnica imediata, no próprio fluxo de trabalho</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="chat-wrap">
+      <div class="msg user">
+        <div class="avatar">🧑‍💻</div>
+        <div class="bubble">Reescrevi com <code>WITH</code>, mas a contagem está a dar diferente do original. Porquê?</div>
+      </div>
+      <div class="msg mentor">
+        <div class="avatar">🤖</div>
+        <div class="bubble">Boa tentativa! A tua CTE não está a filtrar <code>estado = 'ativo'</code> antes do <code>GROUP BY</code> — está a contar todos os pedidos. Move o <code>WHERE</code> para dentro da CTE.</div>
+      </div>
+      <div class="msg user">
+        <div class="avatar">🧑‍💻</div>
+        <div class="bubble">Saiu certo agora. 🙌</div>
+      </div>
+      <div class="msg mentor">
+        <div class="avatar">🤖</div>
+        <div class="bubble">Exatamente isso. Já podes aplicar este padrão na query de produção que tens aberta no outro separador.</div>
+      </div>
     </div>
   </div>
-</section>
 
-<section class="cta-final" id="instalar">
-  <div class="wrap">
-    <h2>A tua próxima competência cabe nos próximos 10 minutos.</h2>
-    <p class="sub" style="margin-left:auto;margin-right:auto;">Instala o plugin, define o teu objetivo, e deixa o Deep-Flow encontrar a janela certa no teu dia.</p>
-    <div class="hero-ctas">
-      <a href="mvp.html" class="btn-primary">▶ Experimentar o MVP Agora</a>
+  <!-- ECRÃ 5 — Dashboard de Streak Cognitivo -->
+  <div class="screen" data-screen="5">
+    <div class="screen-eyebrow">Ecrã 5 · Dashboard de Streak Cognitivo</div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px;">
+      <h2 class="screen-title">O teu progresso, sem abrir um portal.</h2>
+      <span class="streak-pill">🔥 Streak: 7 dias</span>
+    </div>
+    <p class="screen-sub">Visualizas a evolução acumulada e a prontidão para a próxima unidade — tudo dentro do mesmo painel leve.</p>
+
+    <div class="dash-grid">
+      <div class="dash-row">
+        <div class="dash-card" style="flex: 0.7; text-align:center;">
+          <h4>Progresso alvo</h4>
+          <div class="mini-timer">
+            <svg viewBox="0 0 120 120">
+              <circle class="trk" cx="60" cy="60" r="50"></circle>
+              <circle class="prg" cx="60" cy="60" r="50"></circle>
+            </svg>
+            <div class="pct">68%</div>
+          </div>
+          <div class="mini-caption">Prompt Engineering</div>
+        </div>
+        <div class="dash-card" style="flex: 1.4;">
+          <h4>Minutos investidos no fluxo (semana)</h4>
+          <div class="bars">
+            <div class="bw"><div class="b" style="height:34px;"></div><div class="bl">SEG</div></div>
+            <div class="bw"><div class="b" style="height:50px;"></div><div class="bl">TER</div></div>
+            <div class="bw"><div class="b" style="height:68px;"></div><div class="bl">QUA</div></div>
+            <div class="bw"><div class="b" style="height:26px;"></div><div class="bl">QUI</div></div>
+            <div class="bw"><div class="b" style="height:60px;"></div><div class="bl">SEX</div></div>
+            <div class="bw"><div class="b" style="height:42px;"></div><div class="bl">SÁB</div></div>
+            <div class="bw"><div class="b" style="height:17px; background: #2a2f42;"></div><div class="bl">DOM</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <h4>Conquistas desbloqueadas</h4>
+        <div class="badges">
+          <div class="badge">✅ <span><span class="name">Foco Total</span>7 dias seguidos</span></div>
+          <div class="badge">✅ <span><span class="name">Mestre da Integração</span>15 desafios no VS Code</span></div>
+          <div class="badge">✅ <span><span class="name">Resiliência</span>100 min em micro-pausas</span></div>
+        </div>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
-<footer>
-  <div class="wrap">
-    <span>Deep-Flow · Projeto Sarja · PGI, FCTUC</span>
-    <a href="mvp.html">Ver demonstração funcional →</a>
-  </div>
-</footer>
+<div class="proto-nav">
+  <button class="nav-btn" id="prevBtn">← Anterior</button>
+  <button class="nav-btn primary" id="nextBtn">Seguinte →</button>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const total = 5;
+    let current = 1;
+    const screenPaths = {
+      1: 'deep-flow · onboarding',
+      2: 'deep-flow · janela-de-oportunidade',
+      3: 'deep-flow · micro-desafio.sql',
+      4: 'deep-flow · feedback-conversacional',
+      5: 'deep-flow · dashboard-streak'
+    };
+    const personaNarratives = {
+      1: '<span class="stage">A narrativa</span>Um <b>Engenheiro de Dados</b> sente-se marginalizado pela rápida adoção de novas bibliotecas de IA — inscrever-se num curso tradicional falha por falta de blocos de 2 horas livres. Aqui define o que quer dominar.',
+      2: '<span class="stage">A narrativa</span>Em vez de procurar tempo, é o <b>Deep-Flow que encontra a janela</b> — um hiato de 10 minutos entre o standup e a revisão de sprint que já existia na sua agenda.',
+      3: '<span class="stage">A narrativa</span>O desafio chega <b>dentro do VS Code</b>, com contexto do código real — não é preciso abrir nenhum portal de cursos para começar a praticar.',
+      4: '<span class="stage">A narrativa</span>O mentor de IA corrige o erro <b>no momento</b>, como um colega sénior, permitindo aplicar o padrão na tarefa real minutos depois.',
+      5: '<span class="stage">A narrativa</span>A requalificação deixou de ser um "evento externo": o progresso acumula-se sozinho, e o profissional já está pronto para a próxima unidade.'
+    };
+
+    const stepper = document.getElementById('stepper');
+    for (let i = 1; i <= total; i++) {
+      const b = document.createElement('button');
+      b.dataset.step = i;
+      b.addEventListener('click', function() { goTo(parseInt(this.dataset.step)); });
+      stepper.appendChild(b);
+    }
+
+    function render() {
+      document.querySelectorAll('.screen').forEach(function(s) {
+        s.classList.toggle('active', parseInt(s.dataset.screen) === current);
+      });
+      document.querySelectorAll('.stepper button').forEach(function(b) {
+        const i = parseInt(b.dataset.step);
+        b.classList.toggle('done', i < current);
+        b.classList.toggle('active', i === current);
+      });
+      document.getElementById('stepLabel').textContent = 'Ecrã ' + current + ' de ' + total;
+      document.getElementById('devicePath').textContent = screenPaths[current];
+      document.getElementById('personaText').innerHTML = personaNarratives[current];
+      document.getElementById('prevBtn').disabled = current === 1;
+      document.getElementById('nextBtn').textContent = current === total ? 'Reiniciar ↺' : 'Seguinte →';
+    }
+
+    function goTo(n) {
+      if (n < 1) n = 1;
+      if (n > total) n = total;
+      current = n;
+      render();
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', function() {
+      goTo(current - 1);
+    });
+    document.getElementById('nextBtn').addEventListener('click', function() {
+      if (current === total) {
+        goTo(1);
+      } else {
+        goTo(current + 1);
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight') goTo(current + 1);
+      if (e.key === 'ArrowLeft') goTo(current - 1);
+    });
+
+    render();
+  });
+</script>
 
 </body>
 </html>
